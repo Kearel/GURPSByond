@@ -1,0 +1,3 @@
+WORLD_NAME Dreamscape
+GREET_TEXT Welcome to Dreamscape! A tabletop-like environment build with the byond client and engine! If you are a gamemaster, make sure you have your permissions set. If you are a player, wait until the gamemaster says he's ready!
+BASE_ATTRIBUTE_LEVEL 10

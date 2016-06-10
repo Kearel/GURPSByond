@@ -1,0 +1,1 @@
+#define MOB_OVERLAY_BEHIND 3.5
