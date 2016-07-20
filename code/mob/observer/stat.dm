@@ -15,3 +15,6 @@
 		stat(null, "<font size='4'>ATTRIBUTES</font>")
 		for(var/a in list("Strength", "Dexterity", "Intelligence", "Health"))
 			stat(null, "<b>[a]:</b> [client.controlling.get_attribute_level(a,1,1)]")
+		stat(null, "<font size='3'>STATUS EFFECTS</font>")
+		for(var/status in L.status_manager.print_effects())
+			stat(null,status)

@@ -9,8 +9,14 @@
 	manager = status_manager
 
 //When this returns 0, it is deleted.
-/status_effect/proc/process_flag(var/flag)
+/status_effect/proc/process_flag(var/flag, var/data)
 	return 0
+
+/status_effect/proc/should_delete()
+	return 0
+
+/status_effect/proc/print_effect()
+	return name
 
 /status_effect/Destroy()
 	if(manager)
@@ -24,10 +30,15 @@
 	var/duration = 1 //Lasts til the end of this person's turn
 	flags = STATUS_EVENT_ENDTURN
 
-/status_effect/duration/process_flag(var/flag)
-	if(flag == STATUS_EVENT_ENDTURN)
-		duration--
-	return duration > 0
+/status_effect/duration/print_effect()
+	return "[name] [duration/initial(duration)]"
+
+/status_effect/duration/process_flag(var/flag, var/data)
+	duration-- //we do it this way
+	return 0
+
+/status_effect/duration/should_delete()
+	return duration <= 0
 
 /status_effect/duration/stat
 	name = "Temporary Stat Effect"
