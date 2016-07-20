@@ -1,4 +1,4 @@
-var/list/client_character_verbs = list(/client/proc/End_Turn, /client/proc/MoveOnly, /client/proc/Aim, /client/proc/All_Out_Attack, /client/proc/All_Out_Defense, /client/proc/ChangePosture)
+var/list/client_character_verbs = list(/client/proc/End_Turn, /client/proc/MoveOnly, /client/proc/Aim, /client/proc/All_Out_Attack, /client/proc/All_Out_Defense, /client/proc/ChangePosture, /client/proc/CharacterSheet)
 
 //Returns the current mob on use.
 /client/proc/can_use_character_verb(var/check_action = 1, var/check_done = 1)
@@ -96,3 +96,11 @@ var/list/client_character_verbs = list(/client/proc/End_Turn, /client/proc/MoveO
 		if(choice)
 			L.take_control(key)
 			L.change_posture(choice)
+
+/client/proc/CharacterSheet()
+	set name = "Indepth Character Sheet"
+	set desc = "See this character's character sheet."
+	set category = "Character"
+
+	var/dat = "SUP"
+	src << browse(dat)

@@ -33,5 +33,12 @@ ATTACK - They can attack
 USE - They can use an item/do something besides attacking.
 
 
+STATUS EFFECTS:
+Status effects are controlled by a manager.
+Status effects each have a tag that can be sent to the manager to get the total 'buff/drawback'
+Status effects have a 'strength' to them, that effects how much they effect shit.
+Status effects can be 'linked' meaning that when one dies, so does the other.
 
+Status effects have conditions underwhich they disappear.
+Some disappear after a round, after a turn, etc.
 */

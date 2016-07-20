@@ -15,6 +15,3 @@
 		stat(null, "<font size='4'>ATTRIBUTES</font>")
 		for(var/a in list("Strength", "Dexterity", "Intelligence", "Health"))
 			stat(null, "<b>[a]:</b> [client.controlling.get_attribute_level(a,1,1)]")
-		stat(null,"<font size='4'>SUBATTRIBUTES</font>")
-		stat(null, "<font size='4'>SKILLS</font>")
-		stat(null, "<font size='4'>ADVANTAGES/DISADVANTAGES</font>")

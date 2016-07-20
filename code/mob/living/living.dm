@@ -69,6 +69,7 @@
 	combat_flags = 0
 	wipe_movement_list()
 	build_overlays()
+
 	return
 
 //Gets called when combat begins/ends.
