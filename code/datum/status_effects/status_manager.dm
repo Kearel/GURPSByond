@@ -6,6 +6,9 @@
 	target = A
 	..()
 
+/datum/status_manager/proc/add_status_effect(var/status_to_add)
+	status_effects += new status_to_add(src)
+
 /datum/status_manager/proc/process_event(var/event, var/data)
 	for(var/a in status_effects)
 		var/status_effect/S = a
@@ -13,6 +16,7 @@
 			data = S.process_flag(tag, data)
 			if(S.should_delete())
 				status_effects -= S
+				process_event(STATUS_EVENT_STATUSREMOVED, S)
 				qdel(S)
 	return data
 
@@ -20,4 +24,6 @@
 	. = list()
 	for(var/a in status_effects)
 		var/status_effect/S = a
-		. += S.print_effect()
+		var/text = S.print_effect()
+		if(text)
+			. += text

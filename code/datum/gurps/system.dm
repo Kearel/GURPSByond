@@ -36,8 +36,15 @@
 		. = S.level
 	else
 		. = S.get_level()
-	if(bonuses && S.bonuses_from)
-		for(var/a in S.bonuses_from)
-			. += S.bonuses_from[a] * get_attribute_level(a, 0, 0)
+	if(bonuses)
+		. += S.bonus
+		if(S.bonuses_from && S.bonuses_from.len)
+			for(var/a in S.bonuses_from)
+				. += S.bonuses_from[a] * get_attribute_level(a, 0, 0)
+		. = . * S.bonus_mult
+
 	if(S.whole_numbers_only)
 		. = round(.)
+
+/datum/stat_system/proc/get_real_attribute(var/stat)
+	return attributes[stat]

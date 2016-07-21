@@ -3,19 +3,23 @@
 	var/name = "Status Effect"
 	var/desc = "This is a regular old status effect that does nothing"
 	var/datum/status_manager/manager = null
+	var/invisible = 0
 	var/flags = 0
 
 /status_effect/New(var/status_manager)
 	manager = status_manager
 
-//When this returns 0, it is deleted.
 /status_effect/proc/process_flag(var/flag, var/data)
 	return 0
 
+
+//When this returns 0, it is deleted.
 /status_effect/proc/should_delete()
 	return 0
 
 /status_effect/proc/print_effect()
+	if(invisible)
+		return null
 	return name
 
 /status_effect/Destroy()
@@ -24,6 +28,20 @@
 	..()
 	return
 
+/status_effect/linked
+	name = "Linked Status Effect"
+	desc = "This status effect lasts as long as its lifeline does."
+	flags = STATUS_EVENT_STATUSREMOVED
+	var/status_effect/lifeline
+
+/status_effect/linked/process_flag(var/flag, var/data)
+	if(lifeline == data)
+		lifeline = null
+	return
+
+/status_effect/linked/should_delete()
+	return !!lifeline
+
 /status_effect/duration
 	name = "Duration Effect"
 	desc = "This status effect only lasts for a certain duration"
@@ -31,7 +49,7 @@
 	flags = STATUS_EVENT_ENDTURN
 
 /status_effect/duration/print_effect()
-	return "[name] [duration/initial(duration)]"
+	return "[name] [duration]/[initial(duration)]"
 
 /status_effect/duration/process_flag(var/flag, var/data)
 	duration-- //we do it this way
@@ -40,21 +58,48 @@
 /status_effect/duration/should_delete()
 	return duration <= 0
 
-/status_effect/duration/stat
-	name = "Temporary Stat Effect"
+/status_effect/duration/variable
+	name = "Temporary Variable Effect"
 	desc = "This status effect is a temporary boost to some stat on a person."
 	var/stat = null
 	var/amount = 0
 
-/status_effect/duration/stat/New()
+/status_effect/duration/variable/New()
 	..()
 	if(!manager || !stat || !manager.target)
 		return
 	if(manager.target.vars["[stat]"])
 		manager.target.vars["[stat]"] += amount
 
-/status_effect/duration/stat/Destroy()
-	if(manager && manager.target && stat)
+/status_effect/duration/variable/Destroy()
+	if(manager && manager.target && stat && manager.target.vars["[stat]"])
 		manager.target.vars["[stat]"] -= amount
+	..()
+	return
+
+/status_effect/duration/stat
+	name = "Temporary Stat Effect"
+	desc = "This status effect is a temporary boost to some stat on a person."
+	var/stat
+	var/amount = 0
+	var/mult = 1
+
+/status_effect/duration/stat/New()
+	..()
+	if(!manager || !stat || !manager.target || !ismob(manager.target))
+		return
+	var/mob/living/L = manager.target
+	var/datum/stat/S = L.stats.get_real_attribute(stat)
+	if(S)
+		S.bonus += amount
+		S.bonus_mult *= mult
+
+/status_effect/duration/stat/Destroy()
+	if(manager && manager.target && stat && ismob(manager.target))
+		var/mob/living/L = manager.target
+		var/datum/stat/S = L.stats.get_real_attribute(stat)
+		if(S)
+			S.bonus -= amount
+			S.bonus_mult /= mult
 	..()
 	return

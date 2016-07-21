@@ -5,6 +5,8 @@
 	var/level = 0
 	var/base_level = 0
 	var/base_level_mult = 1
+	var/bonus = 0         //Quarantined var so that status effects/other similar stuff won't directly modify the level
+	var/bonus_mult = 1
 	var/whole_numbers_only = 0 //whether we only consider whole levels for this stat. Mainly used for bonuses.
 
 /datum/stat/New()
@@ -26,7 +28,7 @@
 		return level
 	return level - base_level
 
-/datum/stat/attribute/
+/datum/stat/attribute
 	base_level = 10
 
 /datum/stat/attribute/recalculate_cost()
