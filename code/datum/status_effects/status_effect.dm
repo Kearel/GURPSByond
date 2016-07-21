@@ -6,11 +6,13 @@
 	var/invisible = 0
 	var/flags = 0
 
-/status_effect/New(var/status_manager)
+/status_effect/New(var/status_manager, var/list/changed_stuff)
 	manager = status_manager
+	for(var/v in changed_stuff)
+		vars[v] = changed_stuff[v]
 
 /status_effect/proc/process_flag(var/flag, var/data)
-	return 0
+	return
 
 
 //When this returns 0, it is deleted.
@@ -49,11 +51,11 @@
 	flags = STATUS_EVENT_ENDTURN
 
 /status_effect/duration/print_effect()
-	return "[name] [duration]/[initial(duration)]"
+	return "[name] ([duration])"
 
 /status_effect/duration/process_flag(var/flag, var/data)
 	duration-- //we do it this way
-	return 0
+	return
 
 /status_effect/duration/should_delete()
 	return duration <= 0

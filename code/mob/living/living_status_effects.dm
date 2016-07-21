@@ -5,8 +5,8 @@
 	..()
 	status_manager = new(src)
 
-/mob/living/proc/add_status_effect(var/effect_to_add)
-	return status_manager.add_status_effect(effect_to_add)
+/mob/living/proc/add_status_effect(var/effect_to_add, var/list/changed_stuff)
+	return status_manager.add_status_effect(effect_to_add, changed_stuff)
 
 /mob/living/TurnStart()
 	..()

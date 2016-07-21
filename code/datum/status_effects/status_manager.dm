@@ -6,8 +6,8 @@
 	target = A
 	..()
 
-/datum/status_manager/proc/add_status_effect(var/status_to_add)
-	status_effects += new status_to_add(src)
+/datum/status_manager/proc/add_status_effect(var/status_to_add, var/list/changed_stuff)
+	status_effects += new status_to_add(src, changed_stuff)
 
 /datum/status_manager/proc/process_event(var/event, var/data)
 	for(var/a in status_effects)

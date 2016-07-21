@@ -15,3 +15,5 @@ var/list/admin_log     = list()
 var/list/admins = list()
 var/list/directory = list()							//list of all ckeys with associated client
 var/list/clients = list() //list of all the clients
+
+var/list/created_status_effects = list() //Name = vars

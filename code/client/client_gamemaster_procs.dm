@@ -81,3 +81,39 @@
 				L.add_control(key)
 			else
 				L.remove_control(key)
+
+/client/proc/create_new_status_effect()
+	set name = "Create new status effect"
+	set desc = "Create a new status effect."
+	set category = "GameMaster"
+
+	var/list/rvars = list()
+	rvars["name"]     = input("Name of the status effect", "Status Effect", "Effect") as text
+	rvars["desc"]     = input("Description of the status effect", "Status Effect", "An effect") as text
+	rvars["duration"] = input("Duration of effect", "Status Effect",1) as num
+	rvars["stat"]     = input("Used Stat", "Status Effect", "Strength") as text
+	rvars["amount"]   = input("Amount of bonus", "Status Effect", 0) as num
+	rvars["mult"]     = input("Amount of bonus multiplier", "Status Effect", 1) as num
+
+	for(var/a in rvars)
+		world << "[a] = [rvars[a]]"
+
+
+	created_status_effects[rvars["name"]] = rvars
+
+/client/proc/apply_status_effect(var/mob/living/L)
+	set name = "Apply status effect"
+	set desc = "Apply a created status effect."
+	set category = "GameMaster"
+
+	var/list/rvars = list()
+	var/type = /status_effect/duration/stat
+	if(alert("Use a pregenerated effect, or one you've created at runtime?", "Status Effects", "Pregenerated", "Created") == "Created")
+		var/choice = input("Choose from the list below", "Status Effects", null) as null|anything in created_status_effects
+		if(!choice)
+			return
+		rvars = created_status_effects[choice]
+	else
+		type = input("Choose from a list below", "Status Effects", /status_effect/duration/stat) as anything in typesof(/status_effect)
+
+	L.add_status_effect(type, rvars)

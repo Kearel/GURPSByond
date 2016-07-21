@@ -3,7 +3,8 @@ var/list/admin_verbs_ban = list()
 var/list/admin_verbs_spawn = list()
 var/list/gamemaster_verbs = list(/client/proc/debug_variables, /client/proc/callproc, /client/proc/callproc_target,
 								/client/proc/toggle_buildmode, /client/proc/toggle_combat_verb, /client/proc/toggle_visibility,
-								/client/proc/toggle_allow_darkness, /client/proc/edit_mob_permissions)
+								/client/proc/toggle_allow_darkness, /client/proc/edit_mob_permissions, /client/proc/create_new_status_effect,
+								/client/proc/apply_status_effect)
 
 
 /client/proc/add_admin_verbs()
