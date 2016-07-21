@@ -15,6 +15,7 @@
 	var/maxFatigue = 0
 	var/posture = POSTURE_STAND
 	var/working = 0
+	var/life_tick = 0
 
 /mob/living/New()
 	..()
@@ -29,6 +30,14 @@
 			if(C && C.controlling == src)
 				C.controlling = null
 	..()
+
+/mob/living/Life()
+	. = stat != DEAD
+	if(.)
+		life_tick++
+		if(combat_state == COMBAT_OFF)
+			status_manager.process_event(STATUS_EVENT_ENDTURN)
+			status_manager.process_event(STATUS_EVENT_STARTTURN)
 
 /mob/living/proc/get_portrait()
 	return "<IMG CLASS=icon SRC=\ref[portrait_icon] ICONSTATE='[portrait_state]' style='width:64px;height:64px;'>"
