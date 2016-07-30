@@ -8,11 +8,12 @@
 	var/bonus = 0         //Quarantined var so that status effects/other similar stuff won't directly modify the level
 	var/bonus_mult = 1
 	var/whole_numbers_only = 0 //whether we only consider whole levels for this stat. Mainly used for bonuses.
+	var/can_level = 1          //whether we can put points into this stat to upgrade it.
 
 /datum/stat/New()
 	..()
 	if(base_level)
-		base_level = config.base_attribute_level * base_level_mult
+		base_level = round(config.base_attribute_level * base_level_mult)
 		level = base_level
 
 /datum/stat/proc/get_points_to_level()

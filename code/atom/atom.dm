@@ -11,7 +11,7 @@
 
 /atom/proc/adjust_health(var/amount)
 	if(maxHealth && stat != DEAD) //we have some sort of health
-		health = max(death_threshold, health - amount)
+		health = min(maxHealth,max(death_threshold, health - amount))
 		if(health == death_threshold)
 			Death()
 	return 1

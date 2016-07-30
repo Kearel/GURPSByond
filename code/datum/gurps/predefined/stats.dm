@@ -36,3 +36,12 @@
 	base_level_mult = 0
 	bonuses_from = list("Basic Speed" = 1)
 	whole_numbers_only = 1
+
+/datum/stat/dodge
+	name = "Dodge"
+	desc = "This is how well you can dodge an attack."
+	base_level = 3
+	base_level_mult = 0.3
+	bonuses_from = list("Basic Speed" = 1)
+	whole_numbers_only = 1
+	can_level = 0

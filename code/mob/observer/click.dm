@@ -15,10 +15,6 @@
 		return
 	if(istype(a, /mob/living))
 		var/mob/living/L = a
-		if(pa["ctrl"])
-			client << "You add a status effect to \the [L]."
-			L.add_status_effect(/status_effect/duration/stat/strength/bonus)
-			return
 		if(L.can_control(client.ckey))
 			if(client.controlling)
 				client.controlling.stop_control()

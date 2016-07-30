@@ -13,6 +13,8 @@
 		<a href='?_src_=vars;rotatedatum=\ref[src];rotatedir=left'><<</a>
 		<a href='?_src_=vars;datumedit=\ref[src];varnameedit=dir'>[dir2text(dir)]</a>
 		<a href='?_src_=vars;rotatedatum=\ref[src];rotatedir=right'>>></a>
+		<br>
+		<b><font color='#ff8877'>Health: <a href='?_src_=vars;atomToDamage=\ref[src];adjustDamage=health'>[health]</a> / [maxHealth]</font>
 		</font>
 		"}
 
@@ -22,7 +24,8 @@
 		<br><a href='?_src_=vars;rotatedatum=\ref[src];rotatedir=left'><<</a> <a href='?_src_=vars;datumedit=\ref[src];varnameedit=dir'>[dir2text(dir)]</a> <a href='?_src_=vars;rotatedatum=\ref[src];rotatedir=right'>>></a>
 		<br><a href='?_src_=vars;datumedit=\ref[src];varnameedit=ckey'>[ckey ? ckey : "No ckey"]</a>
 		<br>
-		PUT DAMAGE HERE
+		<b><font color='#ff8877'>Health: <a href='?_src_=vars;atomToDamage=\ref[src];adjustDamage=health'>[health]</a> / [maxHealth]</font>
+		<br><font color='#77ff66'>Fatigue: <a href='?_src_=vars;atomToDamage=\ref[src];adjustDamage=fatigue'>[fatigue]</a> / [maxFatigue]</font></b>
 		</font>
 		"}
 

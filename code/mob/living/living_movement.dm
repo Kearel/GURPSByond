@@ -24,7 +24,7 @@
 		for(var/turf/T in no_diagonals_view(range,src) - src.loc)
 			var/list/astar = AStar(src.loc,T,/turf/proc/AdjacentTurfsContents,/turf/proc/Distance,max_node_depth=range)
 			if(astar)
-				paths[T] = new(astar,T,src)
+				paths[T] = new/datum/path(astar,T,src)
 	else
 		for(var/direct in list(NORTH,SOUTH,EAST,WEST))
 			var/list/steps = list()
@@ -36,6 +36,7 @@
 				steps += current
 				paths[current] = new /datum/path(steps.Copy(),current,src)
 				current = get_step(current,direct)
+	update_movement_images()
 	return paths
 
 /* Movement is as follows:
@@ -58,7 +59,7 @@ Sitting: 0 movement.
 	if(override)
 		total = override
 	else
-		total = get_attribute_level("Basic Move") * multiplier
+		total = get_attribute_level("Basic Move",1,1) * multiplier
 	switch(posture)
 		if(POSTURE_KNEEL)
 			total *= 0.3
@@ -70,7 +71,8 @@ Sitting: 0 movement.
 			return
 		if(POSTURE_BACK)
 			return
-	get_movable_tiles(total, straight)
+	total = max(1,round(total))
+	get_movable_tiles(round(total), straight)
 
 /mob/living/proc/wipe_movement_list()
 	if(paths && paths.len)

@@ -66,7 +66,7 @@
 		current_mob = 1
 	L = initiative_list[initiative_list[current_mob]]
 	L.TurnStart()
-	world << "<font size = '4'>Next Turn: <IMG CLASS=icon SRC=\ref[L.icon] ICONSTATE='[L.icon_state]' style='width:32px;height:32px;'> [L]</font>"
+	world << "<font size = '4'>Next Turn: [L.get_portrait(32)] [L]</font>"
 
 /datum/turn_controller/proc/get_current_mob()
 	return initiative_list[initiative_list[current_mob]]

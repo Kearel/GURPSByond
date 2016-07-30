@@ -22,7 +22,7 @@
 //combat flags (/mob/living/var/combat_flags)
 #define COMBAT_FLAG_TURN  1 //Is it our turn to move?
 #define COMBAT_FLAG_ACTION 2 //Have we selected an action yet?
-#define COMBAT_FLAG_DONE  4 //Have we done all we could?
+#define COMBAT_FLAG_ATTACK 4 //Are we allowed to attack?
 
 
 

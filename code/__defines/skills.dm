@@ -1,0 +1,7 @@
+#define SKILL_EASY 0
+#define SKILL_AVERAGE -1
+#define SKILL_HARD -2
+#define SKILL_VERY_HARD -3
+
+#define SKILL_REQUIRE_ALL 0
+#define SKILL_REQUIRE_ONE 1

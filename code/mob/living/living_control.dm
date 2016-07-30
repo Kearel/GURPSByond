@@ -67,6 +67,7 @@
 	if(!action_precheck())
 		return
 	get_combat_movement(override = 1)
+	combat_flags |= COMBAT_FLAG_ATTACK
 	return
 
 //Gets called whenever a mob uses their turn to attack exclusively.
@@ -85,6 +86,7 @@
 	Suppression Fire, spray an area with fire. Must have a weapon with a RoF of 5+
 	*/
 	get_combat_movement(multiplier= 0.5,straight = 1)
+	combat_flags |= COMBAT_FLAG_ATTACK
 
 //Gets called whenever a mob uses their turn to defend exclusively.
 /mob/living/proc/all_out_defense(var/type = "Dodge")

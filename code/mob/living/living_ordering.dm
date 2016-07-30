@@ -1,3 +1,13 @@
+/mob/living/proc/can_take_action()
+	if(working)
+		return 0
+	if(combat_state == COMBAT_OFF)
+		return 1
+	if(combat_flags & COMBAT_FLAG_TURN)
+		return 1
+	return 0
+
+
 /mob/living/proc/order(var/atom/A, var/mob/observer/user)
 	if(!can_take_action())
 		user << "\red \The [src] cannot move at this time."
@@ -15,5 +25,5 @@
 				wipe_movement_list()
 				return
 	if(istype(A,/mob))
-		//attack shit
+		make_attack_roll(A)
 		return

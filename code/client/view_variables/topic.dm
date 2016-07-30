@@ -341,21 +341,29 @@
 			return
 		M.regenerate_icons()
 */
-	else if(href_list["adjustDamage"] && href_list["mobToDamage"])
-		var/mob/living/L = locate(href_list["mobToDamage"])
-		if(!istype(L)) return
+	else if(href_list["adjustDamage"] && href_list["atomToDamage"])
+		var/atom/a = locate(href_list["atomToDamage"])
+		if(!istype(a)) return
 
 		var/Text = href_list["adjustDamage"]
 
 		var/amount =  input("Deal how much damage to mob? (Negative values here heal)","Adjust [Text]loss",0) as num
 
-		if(!L)
+		if(!a)
 			usr << "Mob doesn't exist anymore"
 			return
 
+		switch(Text)
+			if("health") a.adjust_health(amount)
+			if("fatigue")
+				var/mob/living/L = a
+				if(!istype(L))
+					return
+				L.adjust_fatigue(amount)
+
 		if(amount != 0)
-			log_admin("[key_name(usr)] dealt [amount] amount of [Text] damage to [L]")
-			message_admins("<span class='notice'>[key_name(usr)] dealt [amount] amount of [Text] damage to [L]</span>")
+			log_admin("[key_name(usr)] dealt [amount] amount of [Text] damage to [a]")
+			message_admins("<span class='notice'>[key_name(usr)] dealt [amount] amount of [Text] damage to [a]</span>")
 			href_list["datumrefresh"] = href_list["mobToDamage"]
 
 	else if(href_list["call_proc"])

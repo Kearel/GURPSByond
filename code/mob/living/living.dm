@@ -14,6 +14,8 @@
 	var/fatigue = 0
 	var/maxFatigue = 0
 	var/posture = POSTURE_STAND
+	var/stunned = 0 //If this is greater than 0, then they are stunned
+	var/attack_disabled = 0 //If this is greater than 0, then they cannot attack
 	var/working = 0
 	var/life_tick = 0
 
@@ -39,22 +41,12 @@
 			status_manager.process_event(STATUS_EVENT_ENDTURN)
 			status_manager.process_event(STATUS_EVENT_STARTTURN)
 
-/mob/living/proc/get_portrait()
-	return "<IMG CLASS=icon SRC=\ref[portrait_icon] ICONSTATE='[portrait_state]' style='width:64px;height:64px;'>"
+/mob/living/proc/get_portrait(var/size)
+	return "<IMG CLASS=icon SRC=\ref[portrait_icon] ICONSTATE='[portrait_state]' style='width:[size]px;height:[size]px;'>"
 
 //In case we want to obfusicate this information eventually.
 /mob/living/proc/get_blurb()
 	return desc
-
-/mob/living/proc/can_take_action()
-	if(working)
-		return 0
-	if(combat_state == COMBAT_OFF)
-		return 1
-	if(combat_flags & COMBAT_FLAG_TURN)
-		return 1
-	return 0
-
 
 /*/mob/living/proc/attack(var/atom/movable/A, var/surprise_attack)
 	start_combat()
@@ -88,3 +80,11 @@
 	build_overlays()
 	wipe_movement_list()
 	current_path = null
+
+
+/mob/living/proc/adjust_fatigue(var/amount)
+	if(fatigue < 1)
+		stunned--
+	fatigue -= amount
+	if(fatigue < 1)
+		stunned++

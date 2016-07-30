@@ -43,3 +43,15 @@ proc/islist(var/A)
 			L -= T
 			L -= T.contents
 	return L
+
+/proc/get_distance_penalty(var/distance)
+	for(var/i in distance_penalties)
+		if(distance <= text2num(i))
+			return distance_penalties[i]
+	var/last = distance_penalties.len
+	var/current_distance = distance_penalties[last]
+	. = distance_penalties["[current_distance]"]
+	while(distance > current_distance)
+		current_distance = round(current_distance * 1.5)
+		distance_penalties["[current_distance]"] = .
+		.--
