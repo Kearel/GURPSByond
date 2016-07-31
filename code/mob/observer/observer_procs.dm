@@ -1,16 +1,9 @@
 /mob/observer/verb/upload_ghost_image()
-	set name = "Upload Image"
-	set desc = "Upload an Image to use as your ghost."
+	set name = "Set Ghost Image"
+	set desc = "Set an Image to use as your ghost."
 	set category = "Preferences"
-	var/icon/file = input(src,"Upload an Image", "Image Uploading") as null|icon
-	if(!file)
-		return
-	icon = file
-	var/state = input(src, "Does this file have an icon state?", "Icon State") as null|text
-	if(state)
-		icon_state = state
-	else
-		icon_state = ""
+
+	choose_new_icon(src)
 
 /mob/observer/verb/reset_ghost_image()
 	set name = "Reset Image"

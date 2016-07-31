@@ -3,6 +3,7 @@ var/global/list/spawn_locations = list()
 var/list/living_mobs = list()
 var/list/mob_list = list()
 var/list/skills = list()
+var/list/icon_files = list()
 
 var/global/datum/turn_controller/turn_controller = new
 var/global/combat_state = COMBAT_OFF

@@ -3,6 +3,7 @@
 	var/mob/living/controlling = null //who we are currently controlling
 	var/datum/build_mode/build = null
 	var/gamemaster = 0 //a simple bitcheck to see if someone is gamemaster or not.
+	var/image/controlling_image = null
 
 /client/New()
 	..()
@@ -25,7 +26,7 @@
 
 /client/AllowUpload(var/filename, var/filelength)
 	if(filelength > 5000000)
-		src << "[filename] is too large (max 5M)"
+		src << "[filename] is too large (max 5mb)"
 		return 0
 	return 1
 

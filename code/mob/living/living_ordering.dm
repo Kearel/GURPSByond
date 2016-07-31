@@ -17,13 +17,19 @@
 		if(combat_state == COMBAT_OFF)
 			walk_to(src,A)
 			return
-		if(paths && paths.len)
-			if(paths[A])
-				current_path = paths[A]
-				current_path.get_next() //get rid of the first step (which will always be the src loc)
-				working = 1
-				wipe_movement_list()
-				return
-	if(istype(A,/mob))
+		if(paths && paths.len && paths[A])
+			var/datum/path/current_path = paths[A]
+			wipe_movement_list(paths[A])
+			working = 1
+			current_path.get_next()
+			spawn(0)
+				for(var/target = get_turf(src), !isnull(target), target = current_path.get_next())
+					src.forceMove(target)
+					sleep(7)
+				qdel(current_path)
+				working = 0
+
+			return
+	if(istype(A,/mob/living))
 		make_attack_roll(A)
 		return

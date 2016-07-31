@@ -70,15 +70,16 @@
 /datum/stat_system/proc/get_real_attribute(var/stat)
 	return attributes[stat]
 
-
-/datum/stat_system/proc/get_skill_level(var/skill_name, var/specialization_name, var/check_for_defaults = 1)
-	. = 0
-	var/datum/skill_data/S
+/datum/stat_system/proc/get_real_skill(var/skill_name, var/specialization_name)
 	for(var/s in skill_list)
 		var/datum/skill_data/skill = s
 		if(skill.name == skill_name && skill.specialization == specialization_name)
-			S = skill
-			break
+			return skill
+	return null
+
+/datum/stat_system/proc/get_skill_level(var/skill_name, var/specialization_name, var/check_for_defaults = 1)
+	. = 0
+	var/datum/skill_data/S = get_real_skill(skill_name, specialization_name)
 	if(S)
 		. += S.get_level_from_points()
 		if(S.skill_parent.stat)

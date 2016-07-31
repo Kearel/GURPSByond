@@ -64,10 +64,14 @@ The way this works is that there is a global list of skill datums that you use t
 /datum/skill_data
 	var/name
 	var/tech_level
-	var/points
+	var/points = 0
+	var/bonus = 0
+	var/override = null
 	var/specialization
 	var/datum/skill/skill_parent
 
 /datum/skill_data/proc/get_level_from_points()
+	if(!isnull(override))
+		return override
 	. = round(log(2 * points) / log(2))
-	. += skill_parent.difficulty
+	. += skill_parent.difficulty + bonus

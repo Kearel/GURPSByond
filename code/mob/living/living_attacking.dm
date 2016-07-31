@@ -1,8 +1,15 @@
+/mob/living/proc/toggle_attack(var/on)
+	if(on)
+		combat_flags |= COMBAT_FLAG_ATTACK
+	else if(combat_flags & COMBAT_FLAG_ATTACK)
+		combat_flags ^= COMBAT_FLAG_ATTACK
+	build_overlays()
+
 /mob/living/proc/get_attack_range()
 	return 1
 
 /mob/living/proc/can_attack(var/atom/a)
-	if(!(combat_flags & COMBAT_FLAG_ATTACK) && combat_state != COMBAT_OFF)
+	if(!(combat_flags & COMBAT_FLAG_ATTACK))
 		return 0
 	var/dist = get_dist(src,a)
 	if(dist > get_attack_range() || stunned || attack_disabled)
@@ -24,11 +31,14 @@
 /mob/living/proc/get_attack_damage()
 	return "1d6-3"
 
+/mob/living/proc/roll_attack_damage()
+	return max(0,roll(get_attack_damage()))
+
 /mob/living/proc/make_attack_roll(var/atom/a, var/check_availability = 1)
 	if(check_availability && !can_attack(a))
 		return 0
-	world << "[get_portrait(32)] <b>\The [src] attacks!</b>"
-	var/roll_to_attack = roll_skill("Brawling")
+	world << "[get_inline()] <b>attacks!</b>"
+	var/roll_to_attack = roll_skill("Brawling", move_attack_rules = !!(combat_flags & COMBAT_FLAG_MOVE_ATTACK))
 	if(istext(roll_to_attack))
 		if(roll_to_attack == "CRITICAL")
 			return 1
@@ -43,19 +53,60 @@
 					deal_damage(a)
 				else
 					world << "\red \The [src] misses!"
-	combat_flags ^= COMBAT_FLAG_ATTACK
+	toggle_attack(0)
 	start_combat()
 	return 1
 
 /mob/living/proc/deal_damage(var/atom/a)
 	var/action = pick("hits", "punches")
-	var/other_portrait
+	var/other = "\the [a]"
 	if(istype(a,/mob/living))
 		var/mob/living/L = a
-		other_portrait = L.get_portrait(32)
-	world << "[get_portrait(32)] <b>\The [src]</b> [action]  [other_portrait ? other_portrait : ""] <b>\the [a]</b>!"
-	var/damage = max(0,roll(get_attack_damage()))
+		other = L.get_inline()
+	world << "[get_inline()] [action] [other]!"
+	var/damage = roll_attack_damage()
 	world << "They deal [damage] damage."
 	a.adjust_health(damage)
 
-/mob/living/
+/mob/living/proc/deal_critical_damage(var/atom/a)
+	var/action = pick("atomizes", "pulverizes")
+	var/other = "\the [a]"
+	if(istype(a,/mob/living))
+		var/mob/living/L = a
+		other = L.get_inline()
+	world << "[get_inline()] </b> [action] [other]!"
+	var/number = roll("3d6")
+	if(number in list(3,18))
+		world << "TRIPLE DAMAGE!"
+		var/damage = roll_attack_damage()
+		world << "They deal [damage] x 3 damage!"
+		a.adjust_health(damage*3)
+	else if(number in list(5,16))
+		world << "DOUBLE DAMAGE!"
+		var/damage = roll_attack_damage()
+		world << "They deal [damage] x 2 damage!"
+		a.adjust_health(damage*2)
+	else if(number in list(6,15))
+		world << "MAXIMUM DAMAGE!"
+		var/dice = get_attack_damage()
+		var/list/splitted = splittext(dice,"d")
+		var/num_of_dice = text2num(splitted[1])
+		var/sides_of_dice = 0
+		var/bonus = 0
+		var/list/splitted2 = splittext(splitted[2], "-")
+		if(splitted2.len == 1)
+			splitted2 = splittext(splitted[2], "+")
+			if(splitted2.len > 1)
+				sides_of_dice = text2num(splitted2[1])
+				bonus = text2num(splitted2[2])
+			else
+				sides_of_dice = text2num(splitted[2])
+		else
+			bonus = -1 * text2num(splitted2[2])
+
+		var/damage = max(0,num_of_dice * sides_of_dice + bonus)
+		world << "They deal [damage] damage!"
+		a.adjust_health(damage)
+	else
+		world << "DO THE REST LATERRRR"
+		deal_damage(a)

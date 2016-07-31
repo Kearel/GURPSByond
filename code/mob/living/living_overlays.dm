@@ -4,4 +4,9 @@
 	if(combat_flags & COMBAT_FLAG_TURN)
 		overlays += image(icon = 'icons/effects/overlays.dmi',icon_state = "current_turn", layer = MOB_OVERLAY_BEHIND)
 
+	if(combat_flags & COMBAT_FLAG_ATTACK)
+		overlays += image(icon = 'icons/effects/overlays.dmi', icon_state = "attack", layer = MOB_OVERLAY_BEHIND)
+
+
+
 	return

@@ -4,7 +4,6 @@
 
 	//pathing stuff
 	var/list/paths //list of all available paths. target turf = datum
-	var/datum/path/current_path //list of the current path.
 
 /mob/living/proc/update_movement_images()
 	if(!paths || !paths.len)
@@ -55,6 +54,8 @@ Sitting: 0 movement.
 
 
 /mob/living/proc/get_combat_movement(var/multiplier = 1, var/override, var/straight)
+	if(combat_state == COMBAT_OFF)
+		return
 	var/total
 	if(override)
 		total = override
@@ -74,29 +75,16 @@ Sitting: 0 movement.
 	total = max(1,round(total))
 	get_movable_tiles(round(total), straight)
 
-/mob/living/proc/wipe_movement_list()
+/mob/living/proc/wipe_movement_list(var/keep_this_path)
 	if(paths && paths.len)
 		for(var/a in paths)
 			var/datum/path/P = paths[a]
-			if(P != current_path)
+			if(P != keep_this_path)
 				qdel(P)
 		paths.Cut()
 
-/mob/living/Life()
-	..()
-	if(current_path)
-		var/target = current_path.get_next()
-		if(isnull(target))
-			qdel(current_path)
-			working = 0
-			current_path = null
-			return
-		step_to(src,target)
-
 /mob/living/Destroy()
 	wipe_movement_list()
-	if(current_path)
-		qdel(current_path)
 	..()
 
 /mob/living/Move()

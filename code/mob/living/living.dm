@@ -33,6 +33,10 @@
 				C.controlling = null
 	..()
 
+/mob/living/Death()
+	world << "\The [src] falls down, dead."
+	return ..()
+
 /mob/living/Life()
 	. = stat != DEAD
 	if(.)
@@ -43,6 +47,9 @@
 
 /mob/living/proc/get_portrait(var/size)
 	return "<IMG CLASS=icon SRC=\ref[portrait_icon] ICONSTATE='[portrait_state]' style='width:[size]px;height:[size]px;'>"
+
+/mob/living/proc/get_inline()
+	return "[get_portrait(32)] <b>\the [src]</b>"
 
 //In case we want to obfusicate this information eventually.
 /mob/living/proc/get_blurb()
@@ -79,7 +86,6 @@
 	combat_flags = 0
 	build_overlays()
 	wipe_movement_list()
-	current_path = null
 
 
 /mob/living/proc/adjust_fatigue(var/amount)

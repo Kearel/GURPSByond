@@ -7,15 +7,14 @@
 	var/client/C = directory["[key]"]
 	controlled_by = key
 	C.controlling = src
-	C.verbs += client_character_verbs
+	C.start_controlling(src)
 	update_movement_images()
 
 /mob/living/proc/stop_control()
 	var/client/C = directory["[controlled_by]"]
 	if(C && C.controlling == src)
-		C.controlling = null
+		C.stop_controlling()
 	controlled_by = null
-	C.verbs -= client_character_verbs
 	update_movement_images()
 
 /mob/living/proc/add_control(var/key)
@@ -61,14 +60,24 @@
 	//put in aim status effect here.
 
 	get_combat_movement(override = 1)
+	world << "[get_inline()] aims!"
 
 //Gets called whenever a mob uses their turn to attack. Still lets them defend though (from attacks n shit)
 /mob/living/proc/attack()
 	if(!action_precheck())
 		return
 	get_combat_movement(override = 1)
-	combat_flags |= COMBAT_FLAG_ATTACK
+	toggle_attack(1)
+	world << "[get_inline()] attacks!"
 	return
+
+/mob/living/proc/move_and_attack()
+	if(!action_precheck())
+		return
+	get_combat_movement()
+	toggle_attack(1)
+	combat_flags |= COMBAT_FLAG_MOVE_ATTACK
+	world << "[get_inline()] moves and attacks!"
 
 //Gets called whenever a mob uses their turn to attack exclusively.
 /mob/living/proc/all_out_attack()
@@ -86,7 +95,8 @@
 	Suppression Fire, spray an area with fire. Must have a weapon with a RoF of 5+
 	*/
 	get_combat_movement(multiplier= 0.5,straight = 1)
-	combat_flags |= COMBAT_FLAG_ATTACK
+	toggle_attack(1)
+	world << "[get_inline()] all-out-attacks!"
 
 //Gets called whenever a mob uses their turn to defend exclusively.
 /mob/living/proc/all_out_defense(var/type = "Dodge")
@@ -103,9 +113,14 @@
 	switch(type)
 		if("Dodge")
 			get_combat_movement(multiplier = 0.5)
+			add_status_effect(/status_effect/duration/stat/alloutdodge)
 		else
 			get_combat_movement(override = 1)
-	world << "PLACEHOLDER: Apply +2 to [type]."
+
+	world << "[get_inline()] all-out-defends!"
+
+
+
 
 //Gets called wheneter a mob uses their turn to change their posture.
 /mob/living/proc/change_posture(var/new_posture)
@@ -115,16 +130,19 @@
 		return
 	if((posture == POSTURE_KNEEL || new_posture == POSTURE_KNEEL) && (posture == POSTURE_STAND || new_posture == POSTURE_STAND))
 		//Only costs 1 step. So give them a debuff here that subtracts 1 step.
-		world << "PLACEHOLDER: Only costs 1. Put a debuff here for -1 Basic Move for the duration of the TURN"
+		add_status_effect(/status_effect/duration/stat/basic_move/change_posture)
 	else
 		action_precheck() //we use this function because we don't want to switch it on accidently.
 		//Costs a full action.
 	posture = new_posture
+	world << "[get_inline()] changes its posture to [posture]!"
 
 //Gets called whenever a mob uses their turn to concentrate on something.
 /mob/living/proc/concentrate()
 	if(!action_precheck())
 		return
+
+	world << "[get_inline()] concentrates!"
 
 //Gets called whenever a mob decides to evaluate a target/situation.
 /mob/living/proc/evaluate()
@@ -132,13 +150,21 @@
 		return
 	//Gives +1 to Attack, Feint, All-Out-Attack, or Move-And-Attack. Can be stacked 3 times. Wears off after a turn.
 
+	world << "[get_inline()] evaluates a target!"
+
 //etc etc, feint
 /mob/living/proc/feint()
 	if(!action_precheck())
 		return
+
+	world << "[get_inline()] feints!"
 
 //etc etc, move.
 /mob/living/proc/move()
 	if(!action_precheck())
 		return
 	get_combat_movement()
+	world << "[get_inline()] moves!"
+
+/mob/living/proc/say(var/text)
+	world << "[get_inline()] says, \"[text]\""

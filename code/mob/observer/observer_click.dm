@@ -1,16 +1,14 @@
 /mob/observer/ClickOn(var/atom/a, params)
-	var/list/pa = params2list(params)
 	if(!client) //Better to just check it here, honestly.
 		return
 	if(client.build)
 		client.build.Click(a,src,params)
 		return
 	if(client.controlling)
-		if(pa["ctrl"])
-			if(a == client.controlling)
-				client.controlling.stop_control()
-				src << "You stop controlling \the [a]."
-				return
+		if(a == client.controlling)
+			client.controlling.stop_control()
+			src << "You stop controlling \the [a]."
+			return
 		client.controlling.order(a, src)
 		return
 	if(istype(a, /mob/living))

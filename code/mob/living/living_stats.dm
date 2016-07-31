@@ -44,8 +44,12 @@
 
 	move_delay = max(0, config.base_movement - get_attribute_level("Basic Speed")/2)
 
-/mob/living/proc/roll_skill(var/skill_to_roll, var/specialization, var/bonuses)
+/mob/living/proc/roll_skill(var/skill_to_roll, var/specialization, var/bonuses, var/move_attack_rules = 0)
 	var/base = stats.get_appropriate_level(skill_to_roll, specialization)
+	if(move_attack_rules)//UUUGH SPECIAL FLAGS FOR MOVING AND ATTACKING UUUGH
+		base -= 4
+		if(base > 9)
+			base = 9
 	world << "Rolling 3d6 versus [skill_to_roll][specialization ? " ([specialization])" : ""] [bonuses > 0 ? "+" : ""][bonuses]"
 	var/text = "Rolling... "
 	var/total = 0

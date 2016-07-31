@@ -14,6 +14,6 @@
 	name = "Health Status Effect"
 	stat = "Health"
 
-/status_effect/duration/stat/strength/bonus
-	name = "Big's Buff Band"
-	mult = 5
+/status_effect/duration/stat/basic_move
+	name = "Basic Move Status Effect"
+	stat = "Basic Move"

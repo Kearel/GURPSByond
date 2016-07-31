@@ -23,7 +23,7 @@
 #define COMBAT_FLAG_TURN  1 //Is it our turn to move?
 #define COMBAT_FLAG_ACTION 2 //Have we selected an action yet?
 #define COMBAT_FLAG_ATTACK 4 //Are we allowed to attack?
-
+#define COMBAT_FLAG_MOVE_ATTACK 8 //Because move+attack has special combat rules... Ugh, hate having to do it this way...
 
 
 //Posture, these effect certain things (like movement)

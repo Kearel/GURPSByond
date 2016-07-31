@@ -105,3 +105,34 @@
 			S.bonus_mult /= mult
 	..()
 	return
+
+/status_effect/duration/skill
+	name = "Temporary Skill Effect"
+	desc = "This status effect gives a temporary boost to a skill of some sort."
+	var/skill
+	var/specialization
+	var/amount = 0
+	var/override
+
+/status_effect/duration/skill/New()
+	..()
+	if(!manager || !skill || !manager.target || !ismob(manager.target))
+		return
+	var/mob/living/L = manager.target
+	var/datum/skill_data/S = L.stats.get_real_skill(skill,specialization)
+	if(S)
+		S.bonus += amount
+		if(!isnull(override))
+			S.override = override
+
+/status_effect/duration/skill/Destroy()
+	if(manager && manager.target && skill && ismob(manager.target))
+		var/mob/living/L = manager.target
+		var/datum/skill_data/S = L.stats.get_real_skill(skill,specialization)
+		if(S)
+			S.bonus -= amount
+			if(!isnull(override) && S.override == override)
+				S.override = null
+	..()
+	return
+
