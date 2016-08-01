@@ -3,6 +3,8 @@
 	desc = "The love child of a rat and a lizard and a man.\n\
 			A Man-Rat-Lizard, if you will."
 
+	icon_state = "kobold_idle"
+	portrait_state = "kobold"
 	starting_stats = list("Strength" = 1, "Dexterity" = 10, "Intelligence" = 3, "Health" = 1,
 						"HP" = 5, "Basic Speed" = 5)
 

@@ -17,12 +17,16 @@
 /datum/stat/attribute/tiny/hp
 	name = "HP"
 	desc = "Physical health values. You lose this, you will die. Probaby."
+	base_level = 0
 	whole_numbers_only = 1
+	bonuses_from = list("Strength" = 1)
 
 /datum/stat/attribute/tiny/fp
 	name = "FP"
 	desc = "Fatigue. Don't lose this or you'll end up unconscious, or worse!"
+	base_level = 0
 	whole_numbers_only = 1
+	bonuses_from = list("Health" = 1)
 
 /datum/stat/attribute/large/basic_speed
 	name = "Basic Speed"

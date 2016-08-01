@@ -5,10 +5,11 @@
 	desc = "if you seein' this something is missing its description."
 
 	icon = 'icons/mob/basic.dmi'
-	icon_state = "kobold_idle"
+
+	delete_on_death = 0
 	var/list/allowed_control = list("everyone") //ckeys of who is controlling this guy
 	var/controlled_by = null//the key of who is controlling us
-	var/portrait_state = "kobold"
+	var/portrait_state = "default"
 	var/portrait_icon = 'icons/portraits/portrait_large.dmi'
 	var/combat_flags = 0 //flags specifically for combat and combat related states.
 	var/fatigue = 0
@@ -34,8 +35,9 @@
 	..()
 
 /mob/living/Death()
-	world << "\The [src] falls down, dead."
-	return ..()
+	..()
+	world << "[get_inline()] falls down, dead."
+	turn_controller.remove_mob(src)
 
 /mob/living/Life()
 	. = stat != DEAD
@@ -44,6 +46,10 @@
 		if(combat_state == COMBAT_OFF)
 			status_manager.process_event(STATUS_EVENT_ENDTURN)
 			status_manager.process_event(STATUS_EVENT_STARTTURN)
+
+			if(life_tick%5 == 2)
+				health_check()
+				disable_check()
 
 /mob/living/proc/get_portrait(var/size)
 	return "<IMG CLASS=icon SRC=\ref[portrait_icon] ICONSTATE='[portrait_state]' style='width:[size]px;height:[size]px;'>"
@@ -63,13 +69,15 @@
 			return
 */
 
-/mob/living/proc/do_attack(var/atom/A, var/datum/attack/attack)
-	return
-
 //Gets called everytime a turn starts.
 /mob/living/proc/TurnStart()
 	combat_flags |= COMBAT_FLAG_TURN|COMBAT_FLAG_ACTION
 	build_overlays()
+	health_check()
+	disable_check()
+	if(stat || stunned)
+		world << "[get_inline()] is disabled and cannot do their turn!"
+		turn_controller.next_turn()
 	return
 
 //Gets called everytime a turn ends.
@@ -89,8 +97,49 @@
 
 
 /mob/living/proc/adjust_fatigue(var/amount)
-	if(fatigue < 1)
-		stunned--
+	var/health_drop = 0
+
+	var/previousFatigue = fatigue
 	fatigue -= amount
-	if(fatigue < 1)
-		stunned++
+	if(fatigue < 0)
+		health_drop += amount
+		if(previousFatigue > 0)
+			health_drop = min(0, health_drop + previousFatigue)
+	if(fatigue < -maxFatigue)
+		var/difference = fatigue + maxFatigue
+		health_drop += difference
+	if(fatigue == -maxFatigue)
+		pass_out()
+	adjust_health(health_drop)
+
+/mob/living/adjust_health(var/amount)
+	if(maxHealth && stat != DEAD && amount != 0) //we have some sort of health
+		if(amount > 0)
+			src.add_status_effect(/status_effect/duration/shock, list("amount" = min(4,amount)))
+		status_manager.process_event(STATUS_EVENT_DAMAGE, amount)
+		var/previousHealth = health
+		health = min(maxHealth,health - amount)
+		if(health <= maxHealth*0.3 && previousHealth > maxHealth * 0.3)
+			src.add_status_effect(/status_effect/reeling)
+		if(health < 0 && health%death_threshold == 0)
+			var/roll = roll_skill("Health")
+			if(health/death_threshold == 5 || roll == "CRIT FAIL" || roll > 0)
+				Death()
+	return 1
+
+
+/mob/living/proc/health_check()
+	if(!stat && health <= 0)
+		var/roll = roll_skill("Health", quiet_roll = (combat_state == COMBAT_OFF))
+		if(roll == "CRIT FAIL" || roll > 0)
+			pass_out()
+
+/mob/living/proc/pass_out()
+	world << "[get_inline()] passes out!"
+	stat = DISABLED
+	build_overlays()
+
+/mob/living/proc/disable_check()
+	if(stat != DISABLED)
+		return
+	stat = (health > 0 && fatigue > 0)

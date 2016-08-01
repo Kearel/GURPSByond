@@ -8,9 +8,9 @@
 	stats = new
 	stats.configure_to(starting_stats, starting_skills,1)
 	if(starting_stats)
-		starting_stats.Cut()
+		starting_stats = null
 	if(starting_skills)
-		starting_skills.Cut()
+		starting_skills = null
 	sync_stats()
 
 /mob/living/Destroy()
@@ -37,20 +37,19 @@
 
 	maxHealth = get_attribute_level("HP",1)
 	health = round(health_percent * maxHealth)
-	death_threshold = -5*maxHealth
+	death_threshold = -maxHealth
 
 	maxFatigue = get_attribute_level("FP",1)
 	fatigue = round(fatigue_percent * maxFatigue)
 
 	move_delay = max(0, config.base_movement - get_attribute_level("Basic Speed")/2)
 
-/mob/living/proc/roll_skill(var/skill_to_roll, var/specialization, var/bonuses, var/move_attack_rules = 0)
+/mob/living/proc/roll_skill(var/skill_to_roll, var/specialization, var/bonuses, var/move_attack_rules = 0, var/quiet_roll = 0)
 	var/base = stats.get_appropriate_level(skill_to_roll, specialization)
 	if(move_attack_rules)//UUUGH SPECIAL FLAGS FOR MOVING AND ATTACKING UUUGH
 		base -= 4
 		if(base > 9)
 			base = 9
-	world << "Rolling 3d6 versus [skill_to_roll][specialization ? " ([specialization])" : ""] [bonuses > 0 ? "+" : ""][bonuses]"
 	var/text = "Rolling... "
 	var/total = 0
 	for(var/i in 1 to 3)
@@ -60,16 +59,21 @@
 		if(i != 3)
 			text = "[text] + "
 	text = "[text] <= [base]"
-	world << text
+	if(!quiet_roll)
+		world << "Rolling 3d6 versus [skill_to_roll][specialization ? " ([specialization])" : ""] [bonuses > 0 ? "+" : ""][bonuses]"
+		world << text
 	if((total >= 18 - (base <= 15 ? 1 : 0)) || (total - base >= 10))
-		world << "\red <font size='3'> CRITICAL FAILURE!</font>"
+		if(!quiet_roll)
+			world << "\red <font size='3'> CRITICAL FAILURE!</font>"
 		return "CRIT FAIL"
 	else if(total <= 4 + (base >= 15 ? 1 : 0) + (base >= 16 ? 1 : 0))
-		world << "\green <font size='3'>CRITICAL SUCCESS!</font>"
+		if(!quiet_roll)
+			world << "\green <font size='3'>CRITICAL SUCCESS!</font>"
 		return "CRITICAL"
 	total -= base
-	if(total > 0)
-		world << "\red Failure by a margin of [total]"
-	else
-		world << "\green Success by a margin of [-total]"
+	if(!quiet_roll)
+		if(total > 0)
+			world << "\red Failure by a margin of [total]"
+		else
+			world << "\green Success by a margin of [-total]"
 	return total

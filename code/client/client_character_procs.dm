@@ -1,10 +1,11 @@
 //Returns the current mob on use.
 /client/proc/can_use_character_verb(var/check_action = 1, var/check_working = 1, var/check_turn = 1)
-	if(check_turn && combat_state != COMBAT_OFF && controlling != turn_controller.get_current_mob())
-		src << "\red It is not \the [controlling]'s turn!"
-		return 0
 	if(!controlling)
 		src << "\red You are not controlling anyone."
+		return 0
+
+	if(check_turn && combat_state != COMBAT_OFF && controlling != turn_controller.get_current_mob())
+		src << "\red It is not \the [controlling]'s turn!"
 		return 0
 
 	if(check_working && controlling.working)

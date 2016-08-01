@@ -5,7 +5,7 @@
 
 	var/list/states = icon_states(icon)
 	if(states.len)
-		var/state = input(user, "Choose a particular icon state?", "Icon State", icon_state) as null|anything in icon_states(icon)
+		var/state = input(user, "Choose a particular icon state?", "Icon State") as null|anything in states
 		if(state)
 			icon_state = state
 			return

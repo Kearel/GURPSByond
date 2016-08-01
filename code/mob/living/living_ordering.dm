@@ -24,7 +24,7 @@
 			current_path.get_next()
 			spawn(0)
 				for(var/target = get_turf(src), !isnull(target), target = current_path.get_next())
-					src.forceMove(target)
+					src.Move(target)
 					sleep(7)
 				qdel(current_path)
 				working = 0

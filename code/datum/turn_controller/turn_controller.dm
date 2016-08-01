@@ -45,6 +45,8 @@
 	initiative_list = list()
 	for(var/M in living_mobs)
 		var/mob/living/L = M
+		if(L.stat == DEAD)
+			continue
 		L.PrepareCombat()
 		insert_mob(L, L.get_attribute_level("Basic Move", 1))
 	next_turn()
@@ -57,6 +59,9 @@
 	current_mob = 0
 
 /datum/turn_controller/proc/next_turn()
+	if(initiative_list.len < 2)
+		stop_combat()
+		return
 	var/mob/living/L
 	if(current_mob > 0)
 		L = initiative_list[initiative_list[current_mob]]

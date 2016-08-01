@@ -118,6 +118,8 @@
 #include "code\mob\living\living_stats.dm"
 #include "code\mob\living\living_status_effects.dm"
 #include "code\mob\living\monsters\kobold.dm"
+#include "code\mob\living\monsters\monstrosity.dm"
+#include "code\mob\living\monsters\shade.dm"
 #include "code\mob\new_player\new_player.dm"
 #include "code\mob\observer\observer.dm"
 #include "code\mob\observer\observer_click.dm"

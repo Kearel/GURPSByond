@@ -10,6 +10,9 @@
 	manager = status_manager
 	for(var/v in changed_stuff)
 		vars[v] = changed_stuff[v]
+	if(!manager || !manager.target)
+		return 0
+	return 1
 
 /status_effect/proc/process_flag(var/flag, var/data)
 	return

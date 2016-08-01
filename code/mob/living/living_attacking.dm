@@ -29,7 +29,7 @@
 	return 1
 
 /mob/living/proc/get_attack_damage()
-	return "1d6-3"
+	return get_swing_dice(get_attribute_level("Strength",1))
 
 /mob/living/proc/roll_attack_damage()
 	return max(0,roll(get_attack_damage()))
@@ -41,7 +41,7 @@
 	var/roll_to_attack = roll_skill("Brawling", move_attack_rules = !!(combat_flags & COMBAT_FLAG_MOVE_ATTACK))
 	if(istext(roll_to_attack))
 		if(roll_to_attack == "CRITICAL")
-			return 1
+			deal_critical_damage(a)
 		else
 			return 0
 	else

@@ -55,3 +55,16 @@ proc/islist(var/A)
 		current_distance = round(current_distance * 1.5)
 		distance_penalties["[current_distance]"] = .
 		.--
+
+/proc/get_thrust_dice(var/level)
+	if(level <= 40)
+		level = round(level/2)
+	else
+		level = round(20 + (level-40)/5)
+
+	return strength_thrust_table[level]
+
+/proc/get_swing_dice(var/level)
+	if(level > 40)
+		level = round(40 + (level-40)/5)
+	return strength_swing_table[level]
