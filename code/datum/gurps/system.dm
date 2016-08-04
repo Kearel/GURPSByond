@@ -3,7 +3,7 @@
 	var/points = 100
 	var/list/attributes = list(/datum/stat/attribute/strength, /datum/stat/attribute/dexterity, /datum/stat/attribute/intelligence, /datum/stat/attribute/health, //Main Attributes
 							/datum/stat/attribute/tiny/hp, /datum/stat/attribute/tiny/fp, //pools
-							/datum/stat/attribute/large/basic_move, /datum/stat/attribute/large/basic_speed, //substats
+							/datum/stat/attribute/large/basic_move, /datum/stat/attribute/large/basic_speed, /datum/stat/attribute/minor/will, /datum/stat/attribute/minor/perception, //substats
 							/datum/stat/dodge //Misc stats
 	) //basically: name = datum
 
@@ -11,7 +11,7 @@
 	//A BIT different due to how skills work.
 	//Could probably do it similarly, but nah.
 
-/datum/stat_system/New()
+/datum/stat_system/New(var/target)
 	var/list/create_at = list()
 	points = config.starting_points
 	for(var/a in attributes)
@@ -19,6 +19,7 @@
 		create_at["[initial(S.name)]"] = new a
 	attributes.Cut()
 	attributes = create_at
+	holder = target
 
 /datum/stat_system/Destroy()
 	if(holder)
@@ -39,10 +40,10 @@
 	for(var/s in skills)
 		var/list/text = params2list(s)
 		var/datum/skill/skill_parent = get_skill_by_name(text["name"])
-		if(text["specialization"] && !(text["specialization"] in skill_parent.specializations))
+		if(text["specialization"] && !(text["specialization"] in skill_parent.specializations) && !("Editable" in skill_parent.specializations)) //Editable indicates that the specialization is open ended
 			log_to_dd("<h3>ERROR: SPECIALIZATION '[text["specialization"]]' NOT AVAILABLE IN [skill_parent.name]")
 			continue
-		var/datum/skill_data/data = new
+		var/datum/skill_data/data = new(src)
 		for(var/v in text)
 			var/value = text[v]
 			if(!isnull(text2num(value)))
@@ -82,8 +83,6 @@
 	var/datum/skill_data/S = get_real_skill(skill_name, specialization_name)
 	if(S)
 		. += S.get_level_from_points()
-		if(S.skill_parent.stat)
-			. +=  get_attribute_level(S.skill_parent.stat,1,1)
 	else
 		if(check_for_defaults)
 			var/datum/skill/skill = get_skill_by_name(skill_name)

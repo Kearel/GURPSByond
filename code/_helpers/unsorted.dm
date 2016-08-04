@@ -57,14 +57,22 @@ proc/islist(var/A)
 		.--
 
 /proc/get_thrust_dice(var/level)
+	level = min(100,level)
 	if(level <= 40)
 		level = round(level/2)
 	else
 		level = round(20 + (level-40)/5)
 
-	return strength_thrust_table[level]
+	return strength_thrust_table[max(1,level)]
 
 /proc/get_swing_dice(var/level)
+	level = min(100,level)
 	if(level > 40)
 		level = round(40 + (level-40)/5)
-	return strength_swing_table[level]
+	return strength_swing_table[max(1,level)]
+
+/proc/calculate_basic_lift(var/level)
+	level = (level * level)/5
+	if(level > 10)
+		level = round(level)
+	return level

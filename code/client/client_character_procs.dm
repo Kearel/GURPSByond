@@ -104,8 +104,9 @@
 	set desc = "See this character's character sheet."
 	set category = "Character"
 
-	var/dat = "SUP"
-	src << browse(dat)
+	if(!can_use_character_verb(check_action = 0, check_working = 0, check_turn = 0))
+		return
+	src << browse(controlling.get_character_sheet(src), "window=charactersheet")
 
 /client/verb/csay(var/message as text)
 	set name = "csay"

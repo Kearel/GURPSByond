@@ -108,3 +108,8 @@ var/list/strength_swing_table = list("1d6-5",
 									"12d6",
 									"12d6+2",
 									"13d6")
+
+var/list/encumberance_levels = list("None","Light","Medium","Heavy", "X-Heavy")
+
+
+var/list/global_resource_cache = list()

@@ -5,7 +5,7 @@
 
 /mob/living/New()
 	..()
-	stats = new
+	stats = new(src)
 	stats.configure_to(starting_stats, starting_skills,1)
 	if(starting_stats)
 		starting_stats = null
@@ -77,3 +77,19 @@
 		else
 			world << "\green Success by a margin of [-total]"
 	return total
+
+/mob/living/proc/get_character_sheet(var/client/user)
+	var/mod_level = 0
+	if(user.holder || user.gamemaster)
+		mod_level = MODIFICATION_ADMIN
+	else if(user.controlling == src)
+		mod_level = MODIFICATION_USER
+
+	var/header = ""
+	var/text= "[src.portrait_state]"
+	if(!global_resource_cache[text])
+		global_resource_cache[text] = new /icon(src.portrait_icon, src.portrait_state)
+	user << browse_rsc(global_resource_cache[text], "[text].png")
+	header += stats.get_character_sheet(list("portrait" = text, "name" = name), mod_level)
+
+	user << browse(header, "window=charsheet;size=750x500")

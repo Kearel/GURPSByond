@@ -118,13 +118,17 @@
 			src.add_status_effect(/status_effect/duration/shock, list("amount" = min(4,amount)))
 		status_manager.process_event(STATUS_EVENT_DAMAGE, amount)
 		var/previousHealth = health
-		health = min(maxHealth,health - amount)
-		if(health <= maxHealth*0.3 && previousHealth > maxHealth * 0.3)
+		health = max(5 * death_threshold,min(maxHealth,health - amount))
+		if(health <= maxHealth/3 && previousHealth > maxHealth / 3)
 			src.add_status_effect(/status_effect/reeling)
-		if(health < 0 && health%death_threshold == 0)
-			var/roll = roll_skill("Health")
-			if(health/death_threshold == 5 || roll == "CRIT FAIL" || roll > 0)
-				Death()
+		if(health < 0)
+			for(var/i in 1 to 5)
+				if(health <= death_threshold * i)
+					if(previousHealth > death_threshold * i)
+						var/roll = roll_skill("Health")
+						if(i == 5 || roll == "CRIT FAIL" || roll > 0)
+							Death()
+					break
 	return 1
 
 

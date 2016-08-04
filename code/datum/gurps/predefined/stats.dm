@@ -32,7 +32,7 @@
 	name = "Basic Speed"
 	desc = "This tells you how fast your character is."
 	base_level_mult = 0.5
-	bonuses_from = list("Dexterity" = 0.25)
+	bonuses_from = list("Dexterity" = 0.25, "Health" = 0.25)
 
 /datum/stat/attribute/large/basic_move
 	name = "Basic Move"
@@ -40,6 +40,18 @@
 	base_level_mult = 0
 	bonuses_from = list("Basic Speed" = 1)
 	whole_numbers_only = 1
+
+/datum/stat/attribute/minor/will
+	name = "Will"
+	desc = "Mind over matter."
+	base_level = 0
+	bonuses_from = list("Intelligence" = 1)
+
+/datum/stat/attribute/minor/perception
+	name = "Perception"
+	desc = "Seeing is believing."
+	base_level = 0
+	bonuses_from = list("Intelligence" = 1)
 
 /datum/stat/dodge
 	name = "Dodge"

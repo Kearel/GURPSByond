@@ -7,9 +7,12 @@ The way this works is that there is a global list of skill datums that you use t
 
 /proc/generate_skills()
 	for(var/a in subtypesof(/datum/skill))
-		skills += new a
+		var/datum/skill/S = a
+		skills[initial(S.name)] = new a
 
 /proc/get_skill_by_name(var/name)
+	if(skills[name])
+		return skills[name]
 	for(var/a in skills)
 		var/datum/skill/skill = a
 		if(dd_hasprefix(name, skill.name))
@@ -31,7 +34,7 @@ The way this works is that there is a global list of skill datums that you use t
 	var/prerequest_mode = SKILL_REQUIRE_ALL
 	var/list/specializations
 
-/datum/skill/proc/can_get_skill(var/datum/stat_system/system)
+/datum/skill/proc/can_get_skill(var/datum/stat_system/system, var/specialization)
 	for(var/a in prerequests)
 		var/good = 0
 		for(var/s in system.skill_list)
@@ -47,14 +50,14 @@ The way this works is that there is a global list of skill datums that you use t
 			return 0
 	return 0
 
-/datum/skill/proc/calculate_default(var/datum/stat_system/system)
+/datum/skill/proc/calculate_default(var/datum/stat_system/system, var/specialization)
 	. = 0
 	for(var/d in defaults)
 		var/value = 0
 		if(d in system.attributes)
 			value = system.get_attribute_level(d,1)
 		else
-			value = system.get_skill_level(d, 0)
+			value = system.get_skill_level(d, check_for_defaults = 0)
 		if(value)
 			value += defaults[d]
 		if(value > .)
@@ -69,9 +72,19 @@ The way this works is that there is a global list of skill datums that you use t
 	var/override = null
 	var/specialization
 	var/datum/skill/skill_parent
+	var/datum/stat_system/holder
+
+/datum/skill_data/New(var/system)
+	holder = system
+	..()
 
 /datum/skill_data/proc/get_level_from_points()
 	if(!isnull(override))
 		return override
-	. = round(log(2 * points) / log(2))
+	if(points > 4)
+		. = 1+round(points/4)
+	else
+		. = round(points/2)
 	. += skill_parent.difficulty + bonus
+	if(skill_parent.stat)
+		. += holder.get_attribute_level(skill_parent.stat, 1,1)

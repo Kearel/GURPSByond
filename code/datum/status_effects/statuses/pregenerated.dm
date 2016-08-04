@@ -56,7 +56,7 @@
 	..()
 
 /status_effect/reeling/should_delete()
-	return manager.target.health > manager.target.maxHealth * 0.3
+	return manager.target.health > manager.target.maxHealth / 3
 
 /status_effect/duration/shock
 	name = "Shock"
