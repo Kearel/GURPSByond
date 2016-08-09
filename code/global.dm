@@ -113,3 +113,5 @@ var/list/encumberance_levels = list("None","Light","Medium","Heavy", "X-Heavy")
 
 
 var/list/global_resource_cache = list()
+
+var/list/character_sheets = list() //So that they don't get GCd

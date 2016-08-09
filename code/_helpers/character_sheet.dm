@@ -194,7 +194,7 @@
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Skills:</td>\
-	                            <td class=\"rvalue\">[data["skilL_points"]]</td>\
+	                            <td class=\"rvalue\">[data["skill_points"]]</td>\
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Spells:</td>\
@@ -295,11 +295,11 @@
 	                        </tr>\
 	                        <tr class=\"top_border\">\
 	                            <td class=\"label\">Basic Speed:</td>\
-	                            <td class=\"rvalue\">[data["Basic speed"]]</td>\
+	                            <td class=\"rvalue\">[data["Basic Speed"]]</td>\
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Basic Move:</td>\
-	                            <td class=\"rvalue\">[data["Basic move"]]</td>\
+	                            <td class=\"rvalue\">[data["Basic Move"]]</td>\
 	                        </tr>\
 	                        <tr class=\"top_border\">\
 	                            <td class=\"label\">Perception:</td>\
@@ -345,8 +345,8 @@
 		. +=               "<tr>\
 		                        <td class=\"label\">[encumberance_levels[i+1]] ([i])</td>\
 		                        <td class=\"rvalue\">[data["basic lift"] * (i+1)]</td>\
-		                        <td class=\"rvalue\">[data["basic move"] * (1-0.2*i)]</td>\
-		                        <td class=\"rvalue\">[data["dodge"]-i]</td>\
+		                        <td class=\"rvalue\">[data["Basic Move Real"] * (1-0.2*i)]</td>\
+		                        <td class=\"rvalue\">[data["Dodge Real"]-i]</td>\
 		                    </tr>"
 	. +=               "</table>\
 	                </td>\
@@ -395,7 +395,7 @@
 	                        </tr>\
 	                        <tr class=\"top_border\">\
 	                            <td class=\"label\">Tired:</td>\
-	                            <td class=\"rvalue\">[round(data["FP"]/4)]</td>\
+	                            <td class=\"rvalue\">[round(data["FP Real"]/4)]</td>\
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Collapse:</td>\
@@ -403,7 +403,7 @@
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Unconscious:</td>\
-	                            <td class=\"rvalue\">[-data["FP"]]</td>\
+	                            <td class=\"rvalue\">[-data["FP Real"]]</td>\
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"rowspacer1\" colspan=\"2\"></td>\
@@ -421,7 +421,7 @@
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Reeling:</td>\
-	                            <td class=\"rvalue\">[round(data["HP"]/4)]</td>\
+	                            <td class=\"rvalue\">[round(data["HP Real"]/4)]</td>\
 	                        </tr>\
 	                        <tr>\
 	                            <td class=\"label\">Collapse:</td>\
@@ -503,15 +503,17 @@
 	                            <td class=\"title\">Pts</td>\
 	                            <td class=\"title\">Ref</td>\
 	                        </tr>"
-	if(data["skill list"])
+	if(data["skill list"] && length(data["skill list"]))
 		var/list/skill_list = data["skill list"]
-		for(var/i in 1 to skill_list.len)
-			var/datum/skill_data/skill = skill_list[i]
-			. +=            "<tr class=\"[i%2==0 ? "even" : "odd"]\">\
-	                            <td class=\"description\">[skill.name]</td>\
-	                            <td class=\"skill_level\">[skill.get_level_from_points()]</td>\
-	                            <td class=\"relative_skill_level\">[skill.skill_parent.stat][skill.skill_parent.difficulty != 0 ? skill.skill_parent.difficulty : ""]</td>\
-	                            <td class=\"points\">[skill.points]</td>\
+		for(var/a in 1 to skill_list.len)
+			world << a
+			world << skill_list.len
+			var/list/skill = skill_list["[a]"]
+			. +=            "<tr class=\"[a%2==0 ? "even" : "odd"]\">\
+	                            <td class=\"description\">[skill["name"]]</td>\
+	                            <td class=\"skill_level\">[skill["level"]]</td>\
+	                            <td class=\"relative_skill_level\">[skill["relative skill level"]]</td>\
+	                            <td class=\"points\">[skill["points"]]</td>\
 	                            <td class=\"ref\">Ref</td>"
 	. +=                    "</tr>\
 	                    </table>\

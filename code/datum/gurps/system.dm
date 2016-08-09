@@ -1,6 +1,6 @@
 /datum/stat_system
 	var/mob/living/holder = null
-	var/points = 100
+	var/list/points = list("total_points" = 100, "attribute_points" = 0, "advantage_points" = 0, "disadvantage_points" = 0, "quirk_points" = 0, "skill_points" = 0, "spell_points" = 0, "race_points" = 0, "points" = 0)
 	var/list/attributes = list(/datum/stat/attribute/strength, /datum/stat/attribute/dexterity, /datum/stat/attribute/intelligence, /datum/stat/attribute/health, //Main Attributes
 							/datum/stat/attribute/tiny/hp, /datum/stat/attribute/tiny/fp, //pools
 							/datum/stat/attribute/large/basic_move, /datum/stat/attribute/large/basic_speed, /datum/stat/attribute/minor/will, /datum/stat/attribute/minor/perception, //substats
@@ -13,7 +13,8 @@
 
 /datum/stat_system/New(var/target)
 	var/list/create_at = list()
-	points = config.starting_points
+	points["total_points"] = config.starting_points
+	points["points"] = config.starting_points
 	for(var/a in attributes)
 		var/datum/stat/S = a
 		create_at["[initial(S.name)]"] = new a
@@ -27,8 +28,6 @@
 	..()
 
 /datum/stat_system/proc/configure_to(var/list/stats, var/list/skills, var/zero_points = 0)
-	if(zero_points)
-		points = 0
 	for(var/a in stats)
 		var/datum/stat/S
 		S = attributes[a]
@@ -51,6 +50,8 @@
 			data.vars[v] = value
 		data.skill_parent = skill_parent
 		skill_list += data
+	if(zero_points)
+		points["points"] = 0
 
 /datum/stat_system/proc/get_attribute_level(var/stat, var/real = 0, var/bonuses = 1, var/action = "")
 	var/datum/stat/S = attributes[stat]
@@ -93,3 +94,32 @@
 	if(skill_name in attributes)
 		return get_attribute_level(skill_name, 1, 1)
 	return get_skill_level(skill_name, specialization_name)
+
+/datum/stat_system/proc/add_level_to_attribute(var/attribute, var/levels)
+	var/datum/stat/S = get_real_attribute(attribute)
+	if(!S)
+		return 0
+	if(S.level + levels < 0)
+		return 0
+	var/previous_cost = S.recalculate_cost()
+	S.level += levels
+	var/cost = S.recalculate_cost() - previous_cost
+	world << cost
+	if(cost > points["points"])
+		return 0
+
+	points["attribute_points"] += cost
+	points["points"] -= cost
+	return 1
+
+/datum/stat_system/proc/add_points_to_skill(var/skill, var/specialization, var/adding_points)
+	if(points["points"] < adding_points)
+		return 0
+	var/datum/skill_data/S = get_real_skill(skill, specialization)
+	if(!S)
+		world << "Thiiings"
+		return 0
+	points["skill_points"] += adding_points
+	S.points += adding_points
+	points["points"] -= adding_points
+	return 1
