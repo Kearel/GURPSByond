@@ -506,8 +506,6 @@
 	if(data["skill list"] && length(data["skill list"]))
 		var/list/skill_list = data["skill list"]
 		for(var/a in 1 to skill_list.len)
-			world << a
-			world << skill_list.len
 			var/list/skill = skill_list["[a]"]
 			. +=            "<tr class=\"[a%2==0 ? "even" : "odd"]\">\
 	                            <td class=\"description\">[skill["name"]]</td>\

@@ -29,6 +29,7 @@ The way this works is that there is a global list of skill datums that you use t
 	//Can also do something like name (Specialization)
 	//Organized as: name = bonus
 	var/list/defaults
+	var/list/defaults_spec
 	//Organized as: name = required level
 	var/list/prerequests
 	var/prerequest_mode = SKILL_REQUIRE_ALL
@@ -48,16 +49,19 @@ The way this works is that there is a global list of skill datums that you use t
 				return 1
 		else if(prerequest_mode == SKILL_REQUIRE_ALL)
 			return 0
-	return 0
+	return 1
 
 /datum/skill/proc/calculate_default(var/datum/stat_system/system, var/specialization)
 	. = 0
-	for(var/d in defaults)
+	if(!defaults)
+		return 0
+	for(var/i in 1 to defaults.len)
+		var/d = defaults[i]
 		var/value = 0
 		if(d in system.attributes)
 			value = system.get_attribute_level(d,1)
 		else
-			value = system.get_skill_level(d, check_for_defaults = 0)
+			value = system.get_skill_level(d, defaults_spec ? defaults_spec["[i]"] : null, check_for_defaults = 0)
 		if(value)
 			value += defaults[d]
 		if(value > .)

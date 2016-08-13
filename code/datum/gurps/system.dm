@@ -52,6 +52,24 @@
 		skill_list += data
 	if(zero_points)
 		points["points"] = 0
+	sync_total_points()
+
+/datum/stat_system/proc/sync_total_points()
+	points["total_points"] = 0
+	points["attribute_points"] = 0
+	for(var/a in attributes)
+		var/datum/stat/S = attributes[a]
+		var/point = S.recalculate_cost()
+		points["attribute_points"] += point
+		points["total_points"] += point
+
+	points["skill_points"] = 0
+	for(var/s in skill_list)
+		var/datum/skill_data/skill = s
+		points["skill_points"] += skill.points
+		points["total_points"] += skill.points
+
+	points["total_points"] += points["points"]
 
 /datum/stat_system/proc/get_attribute_level(var/stat, var/real = 0, var/bonuses = 1, var/action = "")
 	var/datum/stat/S = attributes[stat]
@@ -104,7 +122,6 @@
 	var/previous_cost = S.recalculate_cost()
 	S.level += levels
 	var/cost = S.recalculate_cost() - previous_cost
-	world << cost
 	if(cost > points["points"])
 		return 0
 
@@ -112,14 +129,24 @@
 	points["points"] -= cost
 	return 1
 
-/datum/stat_system/proc/add_points_to_skill(var/skill, var/specialization, var/adding_points)
+/datum/stat_system/proc/add_points_to_skill(var/skill_name, var/specialization, var/adding_points)
 	if(points["points"] < adding_points)
 		return 0
-	var/datum/skill_data/S = get_real_skill(skill, specialization)
+	var/datum/skill_data/S = get_real_skill(skill_name, specialization)
 	if(!S)
-		world << "Thiiings"
-		return 0
+		var/datum/skill/skill = get_skill_by_name(skill_name)
+		if(skill && skill.can_get_skill(src,specialization))
+			S = new(src)
+			S.name = skill.name
+			S.specialization = specialization
+			S.skill_parent = skill
+			skill_list += S
+		else
+			return 0
 	points["skill_points"] += adding_points
 	S.points += adding_points
+	if(S.points < 1)
+		skill_list -= S
+		qdel(S)
 	points["points"] -= adding_points
 	return 1

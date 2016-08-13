@@ -22,7 +22,8 @@ weapon type."
 	difficulty = SKILL_EASY
 	page_number = "179"
 
-	defaults = list("Dexterity" = -4)
+	defaults = list("Dexterity" = -4, "Beam Weapons" = -4, "Beam Weapons" = -4, "Beam Weapons" = -4)
+	defaults_spec = list("2" = "Pistol", "3" = "Projector", "4" = "Rifle")
 	specializations = list("Pistol", "Projector", "Rifle") //@TODO default amongst one another at -4, Pistol/Rifle gun specs also do for the same spec for beam
 
 /datum/skill/bicycling
@@ -38,7 +39,8 @@ tools and parts are available"
 	difficulty = SKILL_EASY
 	page_number = "180"
 
-	defaults = list("Dexterity" = -4, "Driving (Motorcycle)" = -4)
+	defaults = list("Dexterity" = -4, "Driving" = -4)
+	defaults_spec = list("2" = "Motorcycle")
 
 /datum/skill/bioengineering
 	name = "Bioengineering"
@@ -332,6 +334,7 @@ attacks. For more on barehanded par-\
 ries, see Parrying Unarmed (p. 376)."
 	stat = "Dexterity"
 	difficulty = SKILL_EASY
+	page_number = "183"
 
 /datum/skill/breaking_blow
 	name = "Breaking Blow"

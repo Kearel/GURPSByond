@@ -101,6 +101,12 @@
 /turf/map/structure/small_house
 	icon_state = "small_house"
 
+/turf/map/structure/brown_wall
+	icon_state = "wall_brown"
+
+/turf/map/structure/brown_wall/corner
+	icon_state = "wall_brown_corner"
+
 /turf/map/mountain
 	icon_state = "mountain"
 	density = 1

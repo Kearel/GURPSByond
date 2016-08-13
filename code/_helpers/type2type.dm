@@ -119,3 +119,14 @@
 	for(var/x in splittext(text, delimiter))
 		num_list += text2num(x)
 	return num_list
+
+/proc/difficulty2text(var/difficulty)
+	switch(difficulty)
+		if(SKILL_EASY)
+			return "Easy"
+		if(SKILL_AVERAGE)
+			return "Average"
+		if(SKILL_HARD)
+			return "Hard"
+		if(SKILL_VERY_HARD)
+			return "Very Hard"

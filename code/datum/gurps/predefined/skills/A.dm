@@ -7,25 +7,26 @@ business, etc. A successful Accounting \
 roll (requires at least two hours of \
 study, and possibly months to audit a \
 large corporation) can tell you whether \
-financial records are correct, and possi- \
-bly reveal evidence of forgery, tamper- \
-ing, and similar criminal activity."
+financial records are correct, and possibly\
+reveal evidence of forgery, tampering, \
+and similar criminal activity."
 	stat = "Intelligence"
 	difficulty = SKILL_HARD
 	page_number = "174"
 
 	defaults = list("Intelligence" = -6, "Finance" = -4,
-					"Mathematics (Statistics)" = -5, "Merchant" = -5)
+					"Mathematics" = -5, "Merchant" = -5)
+	defaults_spec = list("3" = "Statistics")
 
 /datum/skill/acrobatics
 	name = "Acrobatics"
-	desc = "This is the ability to perform gym- \
-nastic stunts, roll, take falls, etc. This \
+	desc = "This is the ability to perform gymnastic \
+stunts, roll, take falls, etc. This \
 can be handy on an adventure, as \
 tightrope walking, human pyramids, \
 and trapeze swinging all have useful \
-applications. Each trick requires a sep- \
-arate skill roll, at whatever penalties the \
+applications. Each trick requires a separate \
+skill roll, at whatever penalties the \
 GM sees fit. If you are performing \
 stunts on a moving vehicle or mount, \
 roll against the lower of Acrobatics and \
@@ -160,7 +161,8 @@ completely alien species."
 	difficulty = SKILL_HARD
 	page_number = "175"
 
-	defaults = list("Intelligence" = -6, "Paleontology (Paleoanthropology)" = -2, "Sociology" = -3)
+	defaults = list("Intelligence" = -6, "Paleontology" = -2, "Sociology" = -3)
+	defaults_spec = list("2" = "Paleonanthropology")
 	specializations = list("Human", "Editable")
 
 /datum/skill/aquabatics
@@ -207,7 +209,8 @@ building, find a secret room or door, etc."
 	difficulty = SKILL_AVERAGE
 	page_number = "176"
 
-	defaults = list("Intelligence" = -5, "Engineer (Civil)" = -4)
+	defaults = list("Intelligence" = -5, "Engineer" = -4)
+	defaults_spec = list("2" = "Civil")
 
 
 /datum/skill/area_knowledge
@@ -226,7 +229,8 @@ additional Area Knowledge skills."
 	page_number = "176"
 
 	//@TODO: IQ if you know the area /only/. Geography if the area is in the region specified
-	defaults = list("Intelligence" = -4, "Geography (Regional)" = -3)
+	defaults = list("Intelligence" = -4, "Geography" = -3)
+	defaults_spec = list("2" = "Regional")
 	specializations = list("editable")
 
 /datum/skill/armoury
@@ -244,7 +248,7 @@ to the GM."
 	page_number = "178"
 
 	//@TODO make it so you can set a default to having a specific default or something
-	defaults = list("Intelligence" = -5, "Engineer (same)")
+	defaults = list("Intelligence" = -5, "Engineer")
 	specializations = list("Battlesuits", "Body Armor", "Force Shields", "Heavy Weapons", "Missile Weapons", "Small Arms", "Vehicular Armor")
 
 /datum/skill/artillery
