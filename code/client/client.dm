@@ -4,6 +4,7 @@
 	var/datum/build_mode/build = null
 	var/gamemaster = 0 //a simple bitcheck to see if someone is gamemaster or not.
 	var/image/controlling_image = null
+	var/global_points = 0
 
 /client/New()
 	..()

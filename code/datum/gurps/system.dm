@@ -2,7 +2,7 @@
 	var/mob/living/holder = null
 	var/list/points = list("total_points" = 100, "attribute_points" = 0, "advantage_points" = 0, "disadvantage_points" = 0, "quirk_points" = 0, "skill_points" = 0, "spell_points" = 0, "race_points" = 0, "points" = 0)
 	var/list/attributes = list(/datum/stat/attribute/strength, /datum/stat/attribute/dexterity, /datum/stat/attribute/intelligence, /datum/stat/attribute/health, //Main Attributes
-							/datum/stat/attribute/tiny/hp, /datum/stat/attribute/tiny/fp, //pools
+							/datum/stat/attribute/tiny/hp, /datum/stat/attribute/small/fp, //pools
 							/datum/stat/attribute/large/basic_move, /datum/stat/attribute/large/basic_speed, /datum/stat/attribute/minor/will, /datum/stat/attribute/minor/perception, //substats
 							/datum/stat/dodge //Misc stats
 	) //basically: name = datum
@@ -71,17 +71,19 @@
 
 	points["total_points"] += points["points"]
 
-/datum/stat_system/proc/get_attribute_level(var/stat, var/real = 0, var/bonuses = 1, var/action = "")
+/datum/stat_system/proc/get_attribute_level(var/stat, var/real = 0, var/bonuses = 1, var/status_effect_bonuses = 1, var/action = "")
 	var/datum/stat/S = attributes[stat]
 	if(real)
 		. = S.level
 	else
 		. = S.get_level()
 	if(bonuses)
-		. += S.bonus
 		if(S.bonuses_from && S.bonuses_from.len)
 			for(var/a in S.bonuses_from)
 				. += S.bonuses_from[a] * get_attribute_level(a, 1)
+
+	if(status_effect_bonuses)
+		. += S.bonus
 		. = . * S.bonus_mult
 
 	if(S.whole_numbers_only)
@@ -123,6 +125,7 @@
 	S.level += levels
 	var/cost = S.recalculate_cost() - previous_cost
 	if(cost > points["points"])
+		S.level -= levels
 		return 0
 
 	points["attribute_points"] += cost
@@ -150,3 +153,7 @@
 		qdel(S)
 	points["points"] -= adding_points
 	return 1
+
+/datum/stat_system/proc/add_points(var/amount)
+	points["points"] += amount
+	points["total_points"] += amount

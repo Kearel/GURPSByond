@@ -33,16 +33,19 @@
 	base_level = 10
 
 /datum/stat/attribute/recalculate_cost()
-	return get_level() * config.attribute_points_per_level
+	return get_level() * get_points_to_level()
 
 /datum/stat/attribute/get_points_to_level()
 	return config.attribute_points_per_level
 
 /datum/stat/attribute/minor/get_points_to_level()
-	return (..())/2
+	return round((..())/2)
 
 /datum/stat/attribute/tiny/get_points_to_level()
-	return (..())/5
+	return round((..())/5)
+
+/datum/stat/attribute/small/get_points_to_level()
+	return round((..())/3)
 
 /datum/stat/attribute/large/get_points_to_level()
 	return (..())*2

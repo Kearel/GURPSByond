@@ -117,3 +117,21 @@
 		type = input("Choose from a list below", "Status Effects", /status_effect/duration/stat) as anything in typesof(/status_effect)
 
 	L.add_status_effect(type, rvars)
+
+/client/proc/grant_points(var/client/C)
+	set name = "Grant Points"
+	set desc = "Give points to a client"
+	set category = "GameMaster"
+
+	var/points = input(src, "How many points?", "Points", 0) as num
+	C.add_points(points)
+
+/client/proc/global_grant_points()
+	set name = "Grant Global Points"
+	set desc = "Give points to all mobs"
+	set category = "GameMaster"
+
+	var/points = input(src, "How many points?", "Points", 0) as num
+	for(var/c in clients)
+		var/client/C = c
+		C.add_points(points)

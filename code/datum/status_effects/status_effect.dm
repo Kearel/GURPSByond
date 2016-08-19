@@ -19,7 +19,7 @@
 
 
 //When this returns 0, it is deleted.
-/status_effect/proc/should_delete()
+/status_effect/proc/should_delete(var/flag, var/data)
 	return 0
 
 /status_effect/proc/print_effect()

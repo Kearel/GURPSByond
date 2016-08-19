@@ -23,4 +23,3 @@
 
 /mob/observer/proc/update_vision()
 	see_invisible = (see_darkness ? vision_type : SEE_INVISIBLE_NOLIGHTING)
-

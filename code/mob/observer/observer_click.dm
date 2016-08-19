@@ -4,6 +4,9 @@
 	if(client.build)
 		client.build.Click(a,src,params)
 		return
+	if(istype(a, /obj))
+		qdel(a)
+		return
 	if(client.controlling)
 		if(a == client.controlling)
 			client.controlling.stop_control()

@@ -13,8 +13,8 @@
 	for(var/a in status_effects)
 		var/status_effect/S = a
 		if(S.flags & event)
-			data = S.process_flag(tag, data)
-			if(S.should_delete())
+			data = S.process_flag(event, data)
+			if(S.should_delete(event,data))
 				status_effects -= S
 				process_event(STATUS_EVENT_STATUSREMOVED, S)
 				qdel(S)

@@ -1,3 +1,20 @@
+macro "macro"
+	elem
+		name = "WEST+REP"
+		command = ".west"
+		is-disabled = false
+	elem
+		name = "NORTH+REP"
+		command = ".north"
+		is-disabled = false
+	elem
+		name = "EAST+REP"
+		command = ".east"
+		is-disabled = false
+	elem
+		name = "SOUTH+REP"
+		command = ".south"
+		is-disabled = false
 
 menu "menu"
 	elem 

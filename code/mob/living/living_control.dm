@@ -49,6 +49,8 @@
 		return 1
 	if(!(combat_flags & COMBAT_FLAG_ACTION))
 		return 0
+	if(stunned)
+		return 0
 	if(change)
 		combat_flags ^= COMBAT_FLAG_ACTION
 	return 1
@@ -160,7 +162,7 @@
 	world << "[get_inline()] feints!"
 
 //etc etc, move.
-/mob/living/proc/move()
+/mob/living/proc/move_only()
 	if(!action_precheck())
 		return
 	get_combat_movement()

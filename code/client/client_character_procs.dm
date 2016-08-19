@@ -21,7 +21,7 @@
 /client/verb/End_Turn()
 	set name = "End Turn"
 	set desc = "Ends a character's turn during combat."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(combat_state != COMBAT_OFF && can_use_character_verb(check_action = 0))
 		turn_controller.next_turn()
@@ -29,7 +29,7 @@
 /client/verb/Aim()
 	set name = "Aim"
 	set desc = "Use your turn to aim, gaining bonuses to hit."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(!can_use_character_verb())
 		return
@@ -38,7 +38,7 @@
 /client/verb/All_Out_Attack()
 	set name = "All-Out-Attack"
 	set desc = "Use your turn to attack with great vigor."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(!can_use_character_verb())
 		return
@@ -47,7 +47,7 @@
 /client/verb/All_Out_Defense()
 	set name = "All-Out-Defense"
 	set desc = "Use your turn to defend, and only defend."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(!can_use_character_verb())
 		return
@@ -59,7 +59,7 @@
 /client/verb/AttackOnly()
 	set name = "Attack Only"
 	set desc = "Use your turn to attack exclusively."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(!can_use_character_verb())
 		return
@@ -69,7 +69,7 @@
 /client/verb/MoveAndAttack()
 	set name = "Move And Attack"
 	set desc = "Use your turn to both move and attack."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(!can_use_character_verb())
 		return
@@ -79,17 +79,17 @@
 /client/verb/MoveOnly()
 	set name = "Move Only"
 	set desc = "Use your turn to move fully."
-	set category = "Character"
+	set category = "Character - Combat"
 
 	if(!can_use_character_verb())
 		return
-	controlling.move()
+	controlling.move_only()
 
 
 /client/verb/ChangePosture()
 	set name = "Change Posture"
 	set desc = "Use your turn to change your posture."
-	set category = "Character"
+	set category = "Character - Combat"
 	//Figure out a better way to do this.
 
 	if(!can_use_character_verb())
@@ -98,6 +98,16 @@
 	var/choice = input(src,"Current posture is [controlling.posture]. Change to:","Posture",null) as null|anything in list(POSTURE_STAND, POSTURE_SIT, POSTURE_KNEEL, POSTURE_CRAWL, POSTURE_PRONE, POSTURE_BACK) - controlling.posture
 	if(choice)
 		controlling.change_posture(choice)
+
+/client/verb/Pickup(var/obj/item/I)
+	set name = "Pickup Item"
+	set desc = "Pick an item off the ground."
+	set category = "Character"
+
+	if(!can_use_character_verb())
+		return
+
+	controlling.pickup(I)
 
 /client/verb/CharacterSheet()
 	set name = "Indepth Character Sheet"

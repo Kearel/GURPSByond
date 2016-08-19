@@ -12,6 +12,10 @@
 	src.images -= controlling_image
 	controlling_image = null
 
+/client/proc/add_points(var/amount)
+	global_points += amount
+	src << "You have been granted <b>[amount] global points</b>.<br>You can transfer these to your characters using the character sheet verb."
+
 /client/verb/say(var/message as text)
 	var/color = "#ffffff"
 	if(holder)

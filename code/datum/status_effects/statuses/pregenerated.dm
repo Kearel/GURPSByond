@@ -84,3 +84,45 @@
 		stat.bonus += amount
 	var/datum/stat/dodge = L.stats.get_real_attribute("Dodge")
 	dodge.bonus -= amount * 4
+
+/status_effect/duration/encumbered
+	name = "Encumbered"
+	desc = "You are carrying too much!"
+	flags = STATUS_EVENT_INVENTORY
+	var/level = 0
+
+/status_effect/duration/encumbered/New()
+	if(!..() || !ismob(manager.target))
+		return
+
+	name = "Encumbered ([encumberance_levels[level]])"
+	var/mob/living/L = manager.target
+	var/datum/stat/dodge = L.stats.get_real_attribute("Dodge")
+	dodge.bonus -= level
+	var/datum/stat/movement = L.stats.get_real_attribute("Basic Move")
+	movement.bonus_mult -= 0.2 * level
+
+/status_effect/duration/encumbered/Destroy()
+	if(!manager || !manager.target || !ismob(manager.target))
+		return
+	var/mob/living/L = manager.target
+	var/datum/stat/dodge = L.stats.get_real_attribute("Dodge")
+	dodge.bonus += level
+	var/datum/stat/movement = L.stats.get_real_attribute("Basic Move")
+	movement.bonus_mult += 0.2 * level
+
+/status_effect/over_encumbered
+	name = "Over-Encumbered"
+	desc = "You are carrying so much, you are actively getting weaker and weaker."
+	flags = STATUS_EVENT_INVENTORY|STATUS_EVENT_STARTTURN
+
+/status_effect/over_encumbered/process_flag(var/flag)
+	if(flag == STATUS_EVENT_STARTTURN)
+		var/mob/living/L = manager.target
+		L.adjust_fatigue(1)
+
+/status_effect/over_encumbered/should_delete(var/flag)
+	if(flag == STATUS_EVENT_INVENTORY)
+		var/mob/living/L = manager.target
+		return L.stats.get_encumberance_level() <= 5
+	return 0

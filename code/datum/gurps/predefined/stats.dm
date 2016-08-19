@@ -21,7 +21,7 @@
 	whole_numbers_only = 1
 	bonuses_from = list("Strength" = 1)
 
-/datum/stat/attribute/tiny/fp
+/datum/stat/attribute/small/fp
 	name = "FP"
 	desc = "Fatigue. Don't lose this or you'll end up unconscious, or worse!"
 	base_level = 0

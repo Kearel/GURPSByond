@@ -33,7 +33,7 @@
 	if(!specific || specific == "Attributes")
 		for(var/a in connected_system.attributes)
 			if(connected_system.attributes[a])
-				var/value = connected_system.get_attribute_level(a,1,1)
+				var/value = connected_system.get_attribute_level(a,1,1, status_effect_bonuses = 0)
 				data["[a] Real"] = value
 				data[a] = wrap_data(value, "attribute=[a]", modification_level)
 		specific = null //attributes change /everything/
@@ -43,6 +43,7 @@
 		data["swing_dice"] = get_swing_dice(strength_base)
 		data["collapse health"] = 0
 		data["collapse fatigue"] = 0
+		data["basic lift"] = calculate_basic_lift(connected_system.get_attribute_level("Strength",1, status_effect_bonuses = 0))
 		for(var/i in 1 to 5)
 			data["death threshold [i]"] = -data["HP Real"] * i
 	for(var/a in connected_system.points - "points")
@@ -64,10 +65,32 @@
 			skill_list["[s]"] = skill_data
 		data["skill list"] = skill_list
 
+	if(!specific || specific == "Inventory")
+		var/list/inventory_list = list()
+		if(connected_system.items.len)
+			for(var/e in 1 to connected_system.items.len)
+				var/list/item_list = list()
+				var/obj/item/I = connected_system.items[e]
+				item_list["name"] = I.name
+				item_list["state"] = "<a href='byond://?src=\ref[src];select_item=[e]'>I</a>"
+				item_list["amount"] = I.num
+				item_list["cost per"] = 0
+				item_list["weight per"] = I.get_singular_weight()
+				item_list["cost total"] = 0
+				item_list["weight total"] = I.get_weight()
+				item_list["page number"] = I.page_number
+				inventory_list["[e]"] = item_list
+		data["equipment list"] = inventory_list
+
 /datum/character_sheet/proc/generate_skill_list()
-	. = "<center><a href='byond://?src=\ref[src];switch_mode=Sheet'>Go Back</a></center>\
-	     <body>\
-	         <style type=\"text/css\" title=\"text/css\">\
+	. = "<style type=\"text/css\" title=\"text/css\">\
+	             body\
+	             {\
+	                 color: black;\
+	                 background-color: white;\
+	                 font: normal 7pt/9pt 'Lucida Sans','Arial',sans-serif;\
+	                 margin: 4pt;\
+	             }\
 	             table, tbody, tr, td\
 	             {\
 	                 margin: 0;\
@@ -83,7 +106,9 @@
 	                 verticle-align: top;\
 	                 text-align: center;\
 	             }\
-	         </style>\
+	     </style>\
+	     <body>\
+	     <center><a href='byond://?src=\ref[src];switch_mode=Sheet'>Go Back</a></center>\
 	         <table>\
 	             <tr>\
 	                 <td>Skill</td>\
@@ -190,12 +215,23 @@
 		connected_system.add_points_to_skill(skill.name,specialization,1)
 		refresh_data("Skills")
 	if(href_list["add_points"])
-		var/num = input(user, "Set points to what?", "Points", connected_system.points["points"]) as num
+		var/num = input(user, "You have [user.global_points] global points left. How many do you wish to transfer?", "Points", 0) as num
+		if(num > user.global_points)
+			alert(user, "That is more than you have!")
+			return
 		if(num < 0)
 			return
-		connected_system.points["points"] = num
+		connected_system.points["points"] += num
+		user.global_points -= num
 		connected_system.sync_total_points()
 		refresh_data("Points")
+	if(href_list["select_item"])
+		var/num = text2num(href_list["select_item"])
+		var/choice = input(user, "Select action.", "Inventory", null) as null|anything in list("Equip", "Examine", "Drop")
+		switch(choice)
+			if("Drop")
+				connected_system.holder.drop(num)
+		refresh_data("Inventory")
 
 	user << browse(generate_sheet(), "window=charsheet")
 	return ..()

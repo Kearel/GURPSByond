@@ -344,7 +344,7 @@
 	for(var/i in 0 to 4)
 		. +=               "<tr>\
 		                        <td class=\"label\">[encumberance_levels[i+1]] ([i])</td>\
-		                        <td class=\"rvalue\">[data["basic lift"] * (i+1)]</td>\
+		                        <td class=\"rvalue\">[data["basic lift"] * encumberance_levels[encumberance_levels[i+1]]]</td>\
 		                        <td class=\"rvalue\">[data["Basic Move Real"] * (1-0.2*i)]</td>\
 		                        <td class=\"rvalue\">[data["Dodge Real"]-i]</td>\
 		                    </tr>"
@@ -603,16 +603,21 @@
 	               <td class=\"title\">&sum; $</td>\
 	               <td class=\"title\">&sum; W</td>\
 	               <td class=\"title\">Ref</td>\
-	           </tr>\
+	           </tr>"
+	if(data["equipment list"] && length(data["equipment list"]))
+		var/list/equip_list = data["equipment list"]
+		for(var/e in 1 to equip_list.len)
+			var/list/item = equip_list["[e]"]
+			. += "\
 	           <tr>\
-	               <td class=\"description\">DESCRIPTION</td>\
-	               <td class=\"state\">STATE</td>\
-	               <td class=\"quantity\">QTY</td>\
-	               <td class=\"cost\">COST</td>\
-	               <td class=\"weight\">WEIGHT</td>\
-	               <td class=\"cost_summary\">COST_SUMMARY</td>\
-	               <td class=\"weight_summary\">WEIGHT_SUMMARY</td>\
-	               <td class=\"ref\">REF</td>\
+	               <td class=\"description\">[item["name"]]</td>\
+	               <td class=\"state\">[item["state"]]</td>\
+	               <td class=\"quantity\">[item["amount"]]</td>\
+	               <td class=\"cost\">[item["cost per"]]</td>\
+	               <td class=\"weight\">[item["weight per"]]</td>\
+	               <td class=\"cost_summary\">[item["cost total"]]</td>\
+	               <td class=\"cost_summary\">[item["weight total"]]</td>\
+	               <td class=\"ref\">[item["page number"]]</td>\
 	           </tr>\
 	       </table>\
 	    </body>\
